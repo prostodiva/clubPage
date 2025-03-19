@@ -1,0 +1,252 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+
+enum EntityType {
+  Announcement
+  Meeting
+  ContactRequest
+}
+
+class User {
+  +String id
+  +String email
+  +String password
+  +String name
+  +String profileImageUrl
+  +String role
+  +Array<String> associations
+  +Date createdAt
+  +Date joinedAt
+  +findById(userId: String): Promise<User>
+  +findByEmail(email: String): Promise<User>
+  +save(): Promise<Boolean>
+}
+
+class Announcement {
+  +String id
+  +String title
+  +String content
+  +String authorId
+  +String clubId
+  +Array<String> attachments
+  +Boolean isActive
+  +Date createdAt
+  +Date lastUpdatedAt
+  +String lastUpdatedBy
+  +save(): Promise<Boolean>
+}
+
+class Club {
+  +String id
+  +String title
+  +String content
+  +String imageUrl
+  +Array<CabinetMember> cabinet
+  +Application application
+  +findById(id: String): Promise<Club>
+  +find(): Promise<Array<Club>>
+  +save(): Promise<Boolean>
+}
+
+class CabinetMember {
+  +String userId
+  +String role
+}
+
+class Application {
+  +Array<Question> questions
+}
+
+class Question {
+  +String questionText
+  +String inputType
+  +Array<String> choices
+}
+
+class Association {
+  +String id
+  +String userId
+  +String clubId
+  +String role
+  +findById(id: String): Promise<Association>
+  +findOne(query: Object): Promise<Association>
+  +findOneAndDelete(query: Object): Promise<Association>
+  +save(): Promise<Boolean>
+}
+
+class Notification {
+  +String id
+  +String recipient
+  +String sender
+  +String message
+  +EntityType entityType
+  +Boolean isRead
+  +Boolean scheduledForDeletion
+  +Date createdAt
+  +save(): Promise<Boolean>
+}
+
+class UserService {
+  +findUserById(userId: String): Promise<User>
+  +registerUser(email: String, password: String, name: String): Promise<String>
+  +login(email: String, password: String): Promise<String>
+  +getUserProfileData(userId: String, targetUserId: String): Promise<UserProfileData>
+  +contactRequest(userId: String, targetUserId: String): Promise<String>
+}
+
+class ClubService {
+  +findClubById(clubId: String): Promise<Club>
+  +getAllClubs(): Promise<Array<ClubDTO>>
+  +getClubById(id: String): Promise<ClubDetailsDTO>
+  +getClubMembers(clubId: String, userId: String): Promise<Array<ClubMemberDTO>>
+  +searchClubs(regex: String): Promise<Array<ClubDTO>>
+  +joinClub(clubId: String, userId: String): Promise<Array<Question>>
+  +leaveClub(clubId: String, userId: String): Promise<void>
+  +submitApplication(clubId: String, userId: String, answers: Object): Promise<void>
+}
+
+class AnnouncementService {
+  +ensureOwnership(clubId: String, userId: String): Promise<String>
+  +mapAnnouncement(announcement: Announcement): AnnouncementDTO
+  +getAllAnnouncements(clubId: String, userId: String): Promise<Array<AnnouncementDTO>>
+  +getAnnouncementById(userId: String, announcementId: String): Promise<AnnouncementDTO>
+  +createAnnouncement(announcementDetails: Object): Promise<String>
+  +deleteAnnouncement(announcementId: String, userId: String): Promise<void>
+  +editAnnouncement(userId: String, announcementId: String, body: Object): Promise<Object>
+  +announcementsChangeActiveStatus(announcementId: String, userId: String): Promise<void>
+}
+
+class ClubDTO {
+  +String id
+  +String title
+  +String imageUrl
+}
+
+class ClubDetailsDTO {
+  +String clubId
+  +String title
+  +String content
+  +Array<CabinetMemberDTO> cabinet
+  +String imageUrl
+}
+
+class CabinetMemberDTO {
+  +String name
+  +String email
+  +String role
+}
+
+class ClubMemberDTO {
+  +String userId
+  +String name
+  +String email
+  +String profileImageUrl
+  +String role
+}
+
+class AnnouncementDTO {
+  +String id
+  +String title
+  +String content
+  +Array<String> attachments
+  +Date createdAt
+  +String authorId
+  +String clubId
+  +Boolean isActive
+}
+
+class UserProfileData {
+  +String userId
+  +String name
+  +String email
+  +String profileImageUrl
+  +Array<String> commonClubIds
+}
+
+class NotificationService {
+  +notify(entityId: String, entityDetails: Object, entityType: EntityType): Promise<void>
+  +getNotificationsForUser(userId: String): Promise<Array<Notification>>
+  +getNotificationById(notificationId: String, userId: String): Promise<Notification>
+  +scheduleNotificationForDeletion(notificationId: String, userId: String): Promise<Notification>
+}
+
+class NotificationMessageTemplate {
+  +Announcement(club: Club, message: String, entityId: String): String
+  +Meeting(club: Club, message: String, entityId: String): String
+}
+
+' Relationships
+User "1" -- "*" Association : has
+Club "1" -- "*" Association : has
+User "1" -- "*" Announcement : creates
+Club "1" -- "*" Announcement : contains
+User "1" -- "*" Notification : receives
+User "1" -- "*" Notification : sends
+Club "1" -- "*" CabinetMember : has
+Club "1" -- "1" Application : has
+Application "1" -- "*" Question : contains
+
+UserService --> User : uses
+UserService --> Association : uses
+UserService --> Notification : uses
+AnnouncementService --> Announcement : uses
+AnnouncementService --> User : uses
+AnnouncementService --> Club : uses
+AnnouncementService --> AnnouncementDTO : creates
+UserService --> UserProfileData : creates
+ClubService --> Club : uses
+ClubService --> User : uses
+ClubService --> Association : uses
+ClubService --> ClubDTO : creates
+ClubService --> ClubDetailsDTO : creates
+ClubService --> ClubMemberDTO : creates
+
+NotificationService --> Notification : uses
+NotificationService --> Club : uses
+NotificationService --> User : uses
+NotificationService --> Association : uses
+NotificationService --> NotificationMessageTemplate : uses
+
+note right of Association
+  Schema:
+  - userId: ObjectId (ref: User)
+  - clubId: ObjectId (ref: Club)
+  - role: String (default: "Member")
+end note
+
+note right of Notification
+  Schema:
+  - recipient: ObjectId (ref: User)
+  - sender: ObjectId
+  - message: String
+  - entityType: enum ['Announcement', 'Meeting', 'ContactRequest']
+  - isRead: Boolean (default: false)
+  - scheduledForDeletion: Boolean (default: false)
+  - createdAt: Date (default: now)
+end note
+
+note right of Club
+  Schema:
+  - title: String
+  - content: String
+  - cabinet: Array<CabinetMember>
+  - imageUrl: String
+  - application: Application
+end note
+
+note right of NotificationService
+  Methods:
+  - notify: Creates notifications for club members
+  - getNotificationsForUser: Retrieves user's notifications
+  - getNotificationById: Gets specific notification
+  - scheduleNotificationForDeletion: Marks notification for deletion
+end note
+
+note right of NotificationMessageTemplate
+  Templates:
+  - Announcement: "📢 New Announcement from {club.title}!"
+  - Meeting: "📅 New Meeting for {club.title}!"
+end note
+
+@enduml

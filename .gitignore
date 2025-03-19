@@ -1,0 +1,7 @@
+backend/node_modules
+backend/.env
+backend/.DS_Store
+backend/.idea/
+.log
+/data/db/
+fontend/react/node_modules

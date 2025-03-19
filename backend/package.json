@@ -1,0 +1,24 @@
+{
+  "name": "clubpage-api",
+  "version": "0.1.0",
+  "description": "\"Backend API server for ClubPage application providing user authentication, club management, and data services\"",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
