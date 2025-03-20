@@ -239,25 +239,20 @@ to test the backend before working on frontend:
   "dev": "nodemon server.js"
   }
 
-  npm install --save-dev nodemon
-  npm run dev
-
 - install Nodemon. is a utility that monitors your Node.js application for any changes in your source code and automatically restarts the server when changes are detected.
   Key benefits:
   Saves time by eliminating manual server restarts during development
   Increases productivity when coding
   Watches all files in your project directory
   When you run npm run dev with the script we added, nodemon starts your server and then watches your files. When you make changes to any file, it automatically restarts the server with the new code.
+
   npm install --save-dev nodemon
+  npm run dev
 
-
-   Configure environment variables
-   Set up middleware (cors, body parser, etc.)
-   Connect to MongoDB database
-   Define basic error handling
 
 
 ### 3. Database Design
+Using UML diagram - create a scheme. (scheme.puml)
    Design MongoDB schemas in database/model/
    Create User model with password hashing
    Create other required models (Clubs, Events, etc.)
