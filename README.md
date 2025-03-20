@@ -190,51 +190,56 @@ DO_SPACES_ENDPOINT=https://region.digitaloceanspaces.com
 
 ### 2. Server Setup
    Create the main server.js file (Entry point)
-               Import dependencies:
-               Import the Express app from app.js
-               Import required Node.js modules (http, https)
-               Environment configuration:
-               Load environment variables
-               Set NODE_ENV (development/production)
-               Define port number with fallback
-               Server creation:
-               Create HTTP/HTTPS server with the app
+               - Import dependencies:
+               Import the Express app from app.js // const app = require('./app)
+               Import required Node.js modules (http, https) // const http = require('http');
+              -  Environment configuration:
+               Load environment variables 
+               Set NODE_ENV (development/production) // process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+               Define port number with fallback //const port = process.env.PORT
+               - Server creation:
+               Create HTTP/HTTPS server with the app // const server = http.createServer(app);
                Handle server-level errors
                Implement graceful shutdown
-               Database connection:
+              -  Database connection:
                Connect to MongoDB before starting server
                Handle connection errors
-               Start listening:
-               Start server on configured port
-               Log server status
+               - Start listening:
+               Start server on configured port // server.listen(port);
+               Log server status //console.log(`Server listening on port ${port}`);
+               Export the port and server for use in other modules  //module.exports = { port, server };
+
    Set up basic express app in app.js
-               Express setup:
-               Initialize Express app
+               - Express setup:
+               Initialize Express app   //const express = require('express');
+               This creates a new Express application. // const app = express();
                Configure middleware stack
-               Middleware setup:
+              - Middleware setup:
                Security middleware
-               CORS configuration
-               Request parsing (JSON, URL-encoded)
+               CORS configuration(Cross-Origin Resource Sharing)//const cors = require('cors');
+               Request parsing (JSON, URL-encoded) //app.use(express.json());
                Static file serving
                Logging
-               Routes configuration:
-               Import and attach API routes
+               - Routes configuration:
+               Import and attach API routes //const userRoutes = require('./routes/userRoutes');
                Configure route prefixes
-               Error handling:
+               - Error handling:
                Global error handlers
                404 handler for unmatched routes
                Error response formatting
-               Export configuration:
-               Export the configured Express app
+              -  Export configuration:
+               Export the configured Express app //module.export = app;
    This separation of concerns makes your application more maintainable and easier to test.
 
 to test the backend before working on frontend:
 - add  script to package.json
   "scripts": {
   "dev": "nodemon server.js",
-  "start": "node server.js"
+  "start": "node server.js",
+  "dev": "nodemon server.js"
   }
-- run
+
+  npm install --save-dev nodemon
   npm run dev
 
 - install Nodemon. is a utility that monitors your Node.js application for any changes in your source code and automatically restarts the server when changes are detected.
