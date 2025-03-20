@@ -87,6 +87,31 @@ class Notification {
   +save(): Promise<Boolean>
 }
 
+class Meeting {
+    +String id
+    +String title
+    +String agenda
+    +Date date
+    +String location
+    +Array<String>attachments
+    +Array<String>participants
+    +Boolean isActive
+    +String authorId
+    +String clubId
+    +Date createdAt
+    +Date lastUpdatedAt
+    +Date lastUpdatedBy
+}
+
+class ContactRequest {
+    +String requester
+    +String recipient
+    +String message
+    +enum status['pending', 'accepted', 'declined']
+    +Date createdAt
+    +Date lastUpdatedBy
+}
+
 class UserService {
   +findUserById(userId: String): Promise<User>
   +registerUser(email: String, password: String, name: String): Promise<String>
@@ -247,6 +272,31 @@ note right of NotificationMessageTemplate
   Templates:
   - Announcement: "📢 New Announcement from {club.title}!"
   - Meeting: "📅 New Meeting for {club.title}!"
+end note
+
+note right of Meeting
+    Schema:
+    - title: String
+    - agenda: String
+    - date: Date
+    - location: String
+    - attachments: Array<String>
+    - participants: ObjectId (ref: User)
+    - isActive: Boolean (default: true)
+    - authorId: ObjectId (ref: User)
+    - clubId: ObjectId (ref: Club)
+    - createdAt: Date (default: now)
+    - lastUpdatedBy: ObjectId (ref: User)
+end note
+
+note right of ContactRequest
+    Schema:
+    - requester: ObjectId (ref: User)
+    - recipient: ObjectId (ref: User)
+    - message: String
+    - status: enum ['pending', 'accepted', 'declined']
+    - createdAt: Date (default: now)
+    - lastUpdatedBy: ObjectId (ref: User)
 end note
 
 @enduml
