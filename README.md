@@ -150,6 +150,10 @@ logs
 docs
 
 
+# Pull and run MongoDB container
+docker pull mongo
+docker run -d -p 27017:27017 --name mongodb mongo
+
 
 ### Phase 2: Backend Setup
 1. Initialize Node.js project
@@ -166,6 +170,8 @@ touch .env
   Environment separation: Makes it easy to have different settings for development/production
   Configuration management: Single place to manage all environment variables
   Prevents accidental commits: When added to .gitignore, secrets stay private
+
+
 
 include:
 # Server configuration
