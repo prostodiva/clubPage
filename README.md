@@ -179,7 +179,7 @@ PORT=8080
 BASE_URL=http://localhost:8080
 
 # Database connection
-MONGO_URL=mongodb://username:password@localhost:27017/dbname
+MONGO_URL=mongodb://localhost:27017/mydb
 
 # Authentication
 JWT_SECRET=your_super_secret_random_string_here
