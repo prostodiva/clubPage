@@ -21,6 +21,7 @@ services:
       - /app/node_modules
     environment:
       - MONGO_URI=mongodb://mongo:27017/clubpage
+      - PORT=8080    # Add this line
     depends_on:
       - mongo
 
