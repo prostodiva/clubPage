@@ -11,4 +11,6 @@ async function getAllClubs() {
     return savedClubs;
 }
 
+
+
 module.exports = { getAllClubs };

@@ -4,7 +4,7 @@
 .env
 README.md
 docker-compose*.yml
-Dockerfile*
+../frontend/Dockerfile
 .idea
 .DS_Store
 *.log

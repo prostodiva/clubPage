@@ -303,16 +303,31 @@ Using UML diagram - create a scheme. (scheme.puml)
 ### Phase 3: Frontend Setup
 - Initialize React app with Create React App
   cd frontend
-  npx create-react-app .
-  npm start
+  npm install react react-dom react-scripts
+  npm init -y
+  npm pkg set scripts.start="react-scripts start" scripts.build="react-scripts build" scripts.test="react-scripts test" scripts.eject="react-scripts eject"
+
 - Install dependencies: axios, react-router-dom
   npm install axios react-router-dom
+# Remove the existing node_modules and package-lock.json
+rm -rf node_modules package-lock.json
+
+# Install Vite and create a new setup
+npm create vite@latest . -- --template react
+npm install
+
 - Set up project structure
   - Components folder
   - Services folder for API calls
   - Routing configuration
   - State management
 - Configure environment variables
+
+configure tailwind
+add ui components using
+npx shadcn@latest init
+npx shadcn@latest add form
+
 
 ### Phase 4: Docker Configuration
 - Create backend Dockerfile

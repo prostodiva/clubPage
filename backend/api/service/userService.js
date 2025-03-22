@@ -1,5 +1,5 @@
 const User = require('../../database/model/userModel')
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { BadRequestError, DuplicateUserError, NotFoundError, PasswordValidationError } = require("../../api/errors/errors");
 
