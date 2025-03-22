@@ -62,4 +62,6 @@ async function getAllUsers() {
 return safeUsers;
 }
 
+
+
 module.exports = { register, login, getAllUsers };
