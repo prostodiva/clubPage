@@ -1,20 +1,12 @@
-import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [react()],
-  optimizeDeps: {
-    esbuildOptions: {
-      loader: {
-        '.js': 'jsx',
-      },
-    },
-  },
-  build: {
-    rollupOptions: {
-      input: path.resolve(__dirname, 'index.html'), // Fixed path to your index.html
-    }
+  server: {
+    host: true, // Listen on all addresses
+    port: 5173
   },
   // Ensure the root is correctly set
   root: process.cwd(), // This should point to where your index.html is
