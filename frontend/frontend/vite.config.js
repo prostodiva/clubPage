@@ -11,17 +11,10 @@ export default defineConfig({
       },
     },
   },
-  build: {
-    rollupOptions: {
-      input: path.resolve(__dirname, 'index.html'), // Fixed path to your index.html
-    }
-  },
-  // Ensure the root is correctly set
-  root: process.cwd(), // This should point to where your index.html is
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src') // Add @ alias pointing to src directory
+      '@': path.resolve(__dirname, './src')
     },
     extensions: ['.js', '.jsx', '.json']
   }
-})
+}) 
