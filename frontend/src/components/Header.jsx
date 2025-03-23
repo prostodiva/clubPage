@@ -1,6 +1,4 @@
 import { Link } from "react-router-dom";
-import '../styles/header.css';
-
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -8,7 +6,9 @@ import {
     NavigationMenuLink,
     NavigationMenuList,
     NavigationMenuTrigger,
-} from "../components/ui/navigation-menu.jsx"
+} from "../components/ui/navigation-menu";
+import '../styles/header.css';
+
 
 const Header = () => {
 
@@ -16,7 +16,7 @@ const Header = () => {
         <header className="header">
             <div className="header-container">
                 <NavigationMenu className="nav-menu">
-                    <NavigationMenuList>
+                    <NavigationMenuList className="horizontal-nav-list">
                         <NavigationMenuItem>
                             <Link to="/">
                                 <NavigationMenuLink className="nav-link font-bold">
@@ -69,6 +69,18 @@ const Header = () => {
                         </NavigationMenuItem>
                     </NavigationMenuList>
                 </NavigationMenu>
+
+                <div className="auth-buttons">
+                        <button>
+                            Sign Out
+                        </button>
+                            <Link to="/login" className="login-button">
+                                Login
+                            </Link>
+                            <Link to="/register" className="register-button">
+                                Register
+                            </Link>
+                </div>
             </div>
         </header>
     )

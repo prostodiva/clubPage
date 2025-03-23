@@ -16,6 +16,22 @@
     align-items: center;
     justify-content: space-between;
 }
+.horizontal-nav-list {
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+    gap: 1rem;
+}
+
+.horizontal-nav-list li {
+    list-style-type: none;
+}
+
+.nav-menu ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+}
 
 .nav-menu {
     display: flex;
@@ -45,6 +61,7 @@
     padding: 1rem;
     min-width: 400px;
     text-align: center;
+    position: fixed;
 }
 
 .dropdown-link {
@@ -56,6 +73,7 @@
 
 .dropdown-link:hover {
     background-color: #f3f4f6;
+    position: relative;
 }
 
 .auth-buttons {
@@ -102,4 +120,4 @@ button.login-button {
 button.login-button:hover {
     background-color: white;
     color: #1f2936;
-} 
+}

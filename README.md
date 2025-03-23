@@ -154,6 +154,7 @@ docs
 docker pull mongo
 docker run -d -p 27017:27017 --name mongodb mongo
 
+npm install -D eslint@9.9.1 eslint-config-prettier@9.1.0
 
 ### Phase 2: Backend Setup
 1. Initialize Node.js project
