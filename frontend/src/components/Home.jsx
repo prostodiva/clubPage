@@ -1,7 +1,7 @@
 import '../styles/home.css';
 const Home = () => {
     try {
-        console.log('Hero component rendering');
+        console.log('Home component rendering');
         return (
             <section className="hero" style={{ minHeight: '400px' }}>
                 <div className="hero-gradient">

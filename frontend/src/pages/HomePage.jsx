@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 const HomePage = () => {
-    console.log('LandingPage rendering'); // Debug log
+    console.log('HomePage rendering'); // Debug log
     return (
             <div>
                 <Header />
