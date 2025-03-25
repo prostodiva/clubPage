@@ -16,22 +16,6 @@
     align-items: center;
     justify-content: space-between;
 }
-.horizontal-nav-list {
-    display: flex;
-    flex-direction: row;
-    list-style-type: none;
-    gap: 1rem;
-}
-
-.horizontal-nav-list li {
-    list-style-type: none;
-}
-
-.nav-menu ul {
-    list-style-type: none;
-    display: flex;
-    flex-direction: row;
-}
 
 .nav-menu {
     display: flex;

@@ -9,30 +9,78 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Check for stored user data on mount
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+        try {
+            // Check for stored user data on mount
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                const parsedUser = JSON.parse(storedUser);
+                // Validate user data structure
+                if (isValidUserData(parsedUser)) {
+                    setUser(parsedUser);
+                } else {
+                    console.warn('Invalid user data found in localStorage');
+                    localStorage.removeItem('user');
+                }
+            }
+        } catch (error) {
+            console.error('Error loading auth state:', error);
+            localStorage.removeItem('user');
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     }, []);
 
+    // Validate user data structure
+    const isValidUserData = (data) => {
+        return (
+            data &&
+            typeof data === 'object' &&
+            typeof data.id === 'string' &&
+            typeof data.email === 'string'
+        );
+    };
+
     const login = (userData) => {
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
+        try {
+            if (!isValidUserData(userData)) {
+                throw new Error('Invalid user data provided to login');
+            }
+            setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
+        } catch (error) {
+            console.error('Error during login:', error);
+            throw error;
+        }
     };
 
     const logout = () => {
-        setUser(null);
-        localStorage.removeItem('user');
-        navigate('/');
+        try {
+            setUser(null);
+            localStorage.removeItem('user');
+            navigate('/');
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
+    };
+
+    const contextValue = {
+        user,
+        login,
+        logout,
+        loading
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, loading }}>
+        <AuthContext.Provider value={contextValue}>
             {!loading && children}
         </AuthContext.Provider>
     );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+    const context = useContext(AuthContext);
+    if (context === null) {
+        throw new Error('useAuth must be used within an AuthProvider');
+    }
+    return context;
+};

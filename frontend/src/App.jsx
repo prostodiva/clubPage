@@ -2,6 +2,9 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import HomePage from "./pages/HomePage.jsx";
 import RegistrationPage from "./pages/RegistrationPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import EventsPage from "./pages/EventsPage.jsx";
+import MeetingsPage from "./pages/MeetingsPage.jsx";
+import DashboardPage from "./pages/DashboardPage.jsx";
 
 const AppRoutes = () => {
     console.log('App rendering');
@@ -11,15 +14,17 @@ const AppRoutes = () => {
             <Route path="/home" element={<HomePage />} />
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/events" element={<EventsPage />} />
+            <Route path="/meetings" element={<MeetingsPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/join" element={<Navigate to="/register" replace />} />
         </Routes>
     );
 };
 
 const App = () => {
     return (
-        <Router>
                 <AppRoutes />
-        </Router>
     );
 };
 
