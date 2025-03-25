@@ -8,3 +8,12 @@ docker-compose*.yml
 .idea
 .DS_Store
 *.log
+
+npm-debug.log
+build
+.env.local
+.env.development
+.env.test
+.env.production
+coverage
+dist

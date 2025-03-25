@@ -1,16 +1,21 @@
 services:
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "5173:5173"
     volumes:
       - ./frontend:/app
-      - /app/node_modules
+      - frontend_node_modules:/app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:8080
+      - VITE_API_URL=http://backend:8080
+      - VITE_HOST=0.0.0.0
     depends_on:
       - backend
-    command: npm run start
+    command: npm run dev
+    networks:
+      - app-network
 
   backend:
     build: ./backend
@@ -18,12 +23,15 @@ services:
       - "8080:8080"
     volumes:
       - ./backend:/app
-      - /app/node_modules
+      - backend_node_modules:/app/node_modules
     environment:
       - MONGO_URI=mongodb://mongo:27017/clubpage
-      - PORT=8080    # Add this line
+      - PORT=8080
+      - NODE_ENV=development
     depends_on:
       - mongo
+    networks:
+      - app-network
 
   mongo:
     image: mongo:latest
@@ -31,6 +39,14 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   mongo-data:
+  frontend_node_modules:
+  backend_node_modules:
