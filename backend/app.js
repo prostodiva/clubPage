@@ -1,10 +1,13 @@
 const express = require('express');                         //import the Express module
 const cors = require('cors');                               //import the CORS module
+const securityMiddleware = require('./api/middleware/securityMiddleware');
 
 const userRoutes = require('./api/route/userRoutes');       //import and attach API routes
 const clubRoutes = require('./api/route/clubRoutes');
 
 const app = express();                                      //creates a new Express application
+
+securityMiddleware(app);
 
 app.use(cors());                                            //Enable CORS for all routes
 app.use(express.json());                                    //Parse incoming requests with JSON payloads

@@ -5,9 +5,9 @@ import Footer from '../components/Footer';
 const HomePage = () => {
     console.log('HomePage rendering'); // Debug log
     return (
-            <div>
+            <div className="min-h-screen flex flex-col">
                 <Header />
-                <main>
+                <main className="flex-grow">
                     <Home />
                 </main>
                 <Footer />

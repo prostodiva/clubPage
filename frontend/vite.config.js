@@ -5,14 +5,20 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: true, // Listen on all addresses
-    port: 5173
+    host: true,
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://backend:8080',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   },
-  // Ensure the root is correctly set
-  root: process.cwd(), // This should point to where your index.html is
+  root: process.cwd(),
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src') // Add @ alias pointing to src directory
+      '@': path.resolve(__dirname, './src')
     },
     extensions: ['.js', '.jsx', '.json']
   }

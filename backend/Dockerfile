@@ -2,7 +2,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package files
 COPY package*.json ./
 
 # Install dependencies
@@ -13,5 +13,4 @@ COPY . .
 
 EXPOSE 8080
 
-# Use nodemon for development
 CMD ["npm", "run", "dev"]

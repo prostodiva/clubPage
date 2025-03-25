@@ -7,8 +7,17 @@ router.post('/register', async (req, res, next) => {
     try {
         const { email, password, name } = req.body;
         const userId = await register(email, password, name );
-        res.status(201).send(userId);
+        res.status(201).json({
+            id: userId,
+            email,
+            name,
+        });
     } catch (error) {
+        if (error.code === 'EMAIL_EXISTS') {
+            return res.status(400).json({
+                message: 'Email already registered'
+            });
+        }
         next(error);
     }
 });

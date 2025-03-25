@@ -9,8 +9,8 @@ services:
       - ./frontend:/app
       - frontend_node_modules:/app/node_modules
     environment:
-      - VITE_API_URL=http://backend:8080
       - VITE_HOST=0.0.0.0
+      - NODE_ENV=development
     depends_on:
       - backend
     command: npm run dev
@@ -28,6 +28,8 @@ services:
       - MONGO_URI=mongodb://mongo:27017/clubpage
       - PORT=8080
       - NODE_ENV=development
+      - CORS_ORIGIN=http://localhost:5173
+      - JWT_SECRET=your_secret_key_here
     depends_on:
       - mongo
     networks:
