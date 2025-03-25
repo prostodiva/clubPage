@@ -40,27 +40,41 @@ router.post('/register', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
     try {
         const { email, password } = req.body;
+
+        // Add debug logging
+        console.log('Login attempt for email:', email);
+
+        if (!email || !password) {
+            return res.status(400).json({
+                message: 'Email and password are required'
+            });
+        }
+
         const token = await login(email, password);
         res.status(200).json({ token });
     } catch (error) {
-        // Handle specific error types
+        console.error('Login error:', {
+            message: error.message,
+            name: error.name,
+            stack: error.stack
+        });
+
         if (error instanceof NotFoundError) {
             return res.status(404).json({
-                message: error.message // 'User does not exist'
+                message: error.message
             });
         }
         if (error instanceof PasswordValidationError) {
             return res.status(401).json({
-                message: error.message // 'Password does not match'
+                message: error.message
             });
         }
         if (error instanceof BadRequestError) {
             return res.status(400).json({
-                message: error.message // 'email and password are required'
+                message: error.message
             });
         }
-        // Log unexpected errors
-        console.error('Login error:', error);
+
         next(error);
     }
 });

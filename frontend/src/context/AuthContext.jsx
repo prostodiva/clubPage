@@ -5,48 +5,42 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);  // Add this line
     const navigate = useNavigate();
 
     useEffect(() => {
         try {
-            // Check for stored user data on mount
-            const storedUser = localStorage.getItem('user');
-            if (storedUser) {
-                const parsedUser = JSON.parse(storedUser);
-                // Validate user data structure
-                if (isValidUserData(parsedUser)) {
-                    setUser(parsedUser);
-                } else {
-                    console.warn('Invalid user data found in localStorage');
-                    localStorage.removeItem('user');
-                }
+            // Check for stored token on mount
+            const token = localStorage.getItem('token');
+            if (token) {
+                // Set user data from token
+                setUser({
+                    token,
+                    // Add other user data as needed
+                });
             }
         } catch (error) {
             console.error('Error loading auth state:', error);
-            localStorage.removeItem('user');
+            localStorage.removeItem('token');
         } finally {
             setLoading(false);
         }
     }, []);
 
-    // Validate user data structure
-    const isValidUserData = (data) => {
-        return (
-            data &&
-            typeof data === 'object' &&
-            typeof data.id === 'string' &&
-            typeof data.email === 'string'
-        );
-    };
-
     const login = (userData) => {
         try {
-            if (!isValidUserData(userData)) {
-                throw new Error('Invalid user data provided to login');
+            if (!userData.token) {
+                throw new Error('No token provided');
             }
-            setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData));
+
+            // Store token in localStorage
+            localStorage.setItem('token', userData.token);
+
+            // Set user data
+            setUser({
+                token: userData.token,
+                // Add other user data as needed
+            });
         } catch (error) {
             console.error('Error during login:', error);
             throw error;
@@ -56,7 +50,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         try {
             setUser(null);
-            localStorage.removeItem('user');
+            localStorage.removeItem('token');
             navigate('/');
         } catch (error) {
             console.error('Error during logout:', error);
@@ -67,7 +61,7 @@ export const AuthProvider = ({ children }) => {
         user,
         login,
         logout,
-        loading
+        loading     // Add this to the context value
     };
 
     return (
@@ -84,3 +78,5 @@ export const useAuth = () => {
     }
     return context;
 };
+
+export default AuthContext;

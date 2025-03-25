@@ -32,21 +32,41 @@ async function register(email, password, name) {
 }
 
 async function login(email, password) {
+    // Add debug logging
+    console.log('Login attempt:', { email, passwordProvided: !!password });
+
     if (!email || !password) {
-        throw new BadRequestError("email and password are required");
+        throw new BadRequestError("Email and password are required");
     }
 
     const user = await User.findOne({ email });
+
+    // Add debug logging
+    console.log('User found:', { exists: !!user, email: email });
+
     if (!user) {
         throw new NotFoundError('User does not exist');
     }
 
     const passwordMatches = await bcrypt.compare(password, user.password);
+
+    // Add debug logging
+    console.log('Password check:', { matches: passwordMatches });
+
     if (!passwordMatches) {
         throw new PasswordValidationError('Password does not match');
     }
 
-    return jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '24h' })
+    // Make sure JWT_SECRET exists
+    if (!process.env.JWT_SECRET) {
+        throw new Error('JWT_SECRET is not configured');
+    }
+
+    return jwt.sign(
+        { userId: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '24h' }
+    );
 }
 
 async function getAllUsers() {

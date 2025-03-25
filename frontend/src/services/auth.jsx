@@ -35,16 +35,36 @@ export const authService = {
 
     login: async (credentials) => {
         try {
-            // Use API_URL constant instead of hardcoded URL
-            const response = await axios.post(`${API_URL}/users/login`, credentials, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+            console.log('Sending login request:', {
+                url: `${API_URL}/users/login`,
+                email: credentials.email
             });
-            return response.data;
+
+            const response = await axios.post(`${API_URL}/users/login`, credentials);
+
+            console.log('Login response:', {
+                status: response.status,
+                hasToken: !!response.data.token
+            });
+
+            // Check if we have a token in the response
+            if (!response.data.token) {
+                throw new Error('No token received from server');
+            }
+
+            return {
+                token: response.data.token,
+                // Add any other user data you need
+            };
         } catch (error) {
+            console.error('Login error details:', {
+                status: error.response?.status,
+                data: error.response?.data,
+                message: error.response?.data?.message || error.message
+            });
+
             throw {
-                message: error.message || 'Login failed',
+                message: error.response?.data?.message || 'Login failed',
                 status: error.response?.status || 500
             };
         }

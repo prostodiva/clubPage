@@ -1,36 +1,47 @@
 import { useState } from 'react';
-import { Button } from "../components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card"
-import { Input } from "../components/ui/input"
-import { Label } from "../components/ui/label"
-import { Link } from "react-router-dom"
+import { Button } from "../components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Link } from "react-router-dom";
 
-const LoginForm = ({ onSubmit }) => {
-    const [isLoading, setIsLoading] = useState(false);
-
+const LoginForm = ({ onSubmit, error, isLoading }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
         try {
             const formData = new FormData(e.target);
             const data = {
                 email: formData.get('email'),
                 password: formData.get('password')
             };
-            await onSubmit?.(data);
-        } finally {
-            setIsLoading(false);
+
+            // Validate data before submitting
+            if (!data.email || !data.password) {
+                throw new Error('Email and password are required');
+            }
+
+            await onSubmit(data);
+        } catch (err) {
+            console.error('Form submission error:', err);
         }
     };
 
     return (
-        <Card className="w-[400px]">
+        <Card className="w-full">
             <CardHeader>
                 <CardTitle>Login</CardTitle>
                 <CardDescription>
                     Enter your email and password to login to your account.
                 </CardDescription>
             </CardHeader>
+            {error && (
+                <div className="px-6 mb-4">
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong className="font-bold">Error: </strong>
+                        <span className="block sm:inline">{error}</span>
+                    </div>
+                </div>
+            )}
             <form onSubmit={handleSubmit}>
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
@@ -53,6 +64,7 @@ const LoginForm = ({ onSubmit }) => {
                             placeholder="Enter your password"
                             disabled={isLoading}
                             required
+                            minLength={6}
                         />
                     </div>
                 </CardContent>
@@ -73,7 +85,7 @@ const LoginForm = ({ onSubmit }) => {
                 </CardFooter>
             </form>
         </Card>
-    )
-}
+    );
+};
 
 export default LoginForm;

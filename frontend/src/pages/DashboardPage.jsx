@@ -1,14 +1,20 @@
 import React from 'react';
 import { Card } from '../components/ui/card';
+import Header from "@/components/Header.jsx";
+import Footer from "@/components/Footer.jsx";
 
-const Meetings = () => {
+const Dashboard = () => {
     return (
         <div>
-            <Card>
-                <h1>Meetings</h1>
-            </Card>
+            <Header />
+            <main className="min-h-screen flex flex-col">
+                <Card>
+                    <h1>Dashboard page</h1>
+                </Card>
+            </main>
+            <Footer />
         </div>
     );
 };
 
-export default Meetings;
+export default Dashboard;
