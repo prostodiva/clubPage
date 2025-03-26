@@ -1,10 +1,19 @@
 import '../styles/home.css';
+import homeImage from '../static/images/background.jpg';
+
 const Home = () => {
     try {
         console.log('Home component rendering');
         return (
-            <section className="hero" style={{ minHeight: '400px' }}>
-                <div className="hero-gradient">
+            <section
+                className="hero relative"
+                style={{
+                    minHeight: '400px',
+                    backgroundImage: `url(${homeImage})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                }}>
+                <div>
                     <div className="hero-content">
                         <h1 className="text-4xl font-bold mb-6">
                             Welcome to

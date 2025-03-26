@@ -1,5 +1,8 @@
 import React from 'react';
 import { Card } from '../components/ui/card';
+import eventWorkshop from '../static/images/events.jpg';
+import eventHack from '../static/images/hack.jpg';
+import eventCoffee from '../static/images/coffee.jpg';
 
 const upcomingEvents = [
     {
@@ -7,21 +10,24 @@ const upcomingEvents = [
         title: 'Hackathon 2025',
         date: '2025-04-15',
         description: '24-hour coding challenge with amazing prizes',
-        category: 'Competition'
+        category: 'Competition',
+        image: eventHack
     },
     {
         id: 2,
         title: 'Tech Talk: AI in 2025',
         date: '2025-03-20',
         description: 'Industry experts discuss the latest in AI',
-        category: 'Workshop'
+        category: 'Workshop',
+        image: eventWorkshop
     },
     {
         id: 3,
         title: 'Code & Coffee',
         date: '2025-03-25',
         description: 'Casual coding session with free coffee',
-        category: 'Social'
+        category: 'Social',
+        image: eventCoffee
     }
 ];
 
@@ -37,11 +43,7 @@ const Events = () => {
                 {upcomingEvents.map((event) => (
                     <Card key={event.id} className="overflow-hidden">
                         <div className="relative h-48">
-                            <img
-                                src={event.image}
-                                alt={event.title}
-                                className="absolute inset-0 w-full h-full object-cover"
-                            />
+                            <img src={event.image || "/placeholder.svg"} alt={event.title} className="absolute inset-0 w-full h-full object-cover"/>
                             <div className="absolute top-4 right-4">
                                 <span className="px-3 py-1 bg-white/90 rounded-full text-sm font-medium">
                                     {event.category}
