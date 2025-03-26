@@ -6,13 +6,17 @@ const Home = () => {
         console.log('Home component rendering');
         return (
             <section
-                className="hero relative"
+                className="hero-section"
                 style={{
-                    minHeight: '400px',
+                    minHeight: "calc(85vh - 64px)",
                     backgroundImage: `url(${homeImage})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                }}>
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    position: "relative",
+                    width: "100%",
+                }}
+            >
                 <div>
                     <div className="hero-content">
                         <h1 className="text-4xl font-bold mb-6">

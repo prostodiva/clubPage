@@ -2,7 +2,8 @@ footer {
     width: 100%;
     text-align: left;
     padding: 10px;
-    background: linear-gradient(to right, #1f2936 0%, #351f36 100%);
+    background: linear-gradient(to right, #131210 0%, #131210 100%);
     color: white;
+    border-bottom: 0.5px solid rgb(226, 216, 216);
 }
 

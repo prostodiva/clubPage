@@ -1,6 +1,12 @@
 .hero {
     width: 100%;
-    min-height: 400px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-section {
+    position: relative;
     display: flex;
     flex-direction: column;
 }
@@ -9,12 +15,13 @@
     flex: 1;
     padding: 5rem 0;
     background: linear-gradient(to right, #e3e3e3 0%, #e3e3e3 100%);
+    min-height: calc(100vh - 64px);
 }
 
 .hero-content {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 5rem;
     text-align: center;
     color: #1f2936;
 }
@@ -23,11 +30,13 @@
     font-size: 3rem;
     font-weight: bold;
     margin-bottom: 1.5rem;
+    color: #e3e3e3;
 }
 
 .hero-content p {
     font-size: 1.25rem;
     margin-bottom: 2rem;
+    color: #e3e3e3;
 }
 
 .hero-button {
