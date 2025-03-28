@@ -1,6 +1,6 @@
 const express = require('express');                         //import the Express module
 const cors = require('cors');                               //import the CORS module
-const securityMiddleware = require('./api/middleware/securityMiddleware');
+const { securityMiddleware } = require('./api/middleware/securityMiddleware');
 
 const userRoutes = require('./api/route/userRoutes');       //import and attach API routes
 const clubRoutes = require('./api/route/clubRoutes');

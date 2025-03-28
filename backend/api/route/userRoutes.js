@@ -1,5 +1,6 @@
 const express = require('express');
-const { register, login, getAllUsers } = require('../../api/service/userService');
+const { authenticate } = require('../middleware/securityMiddleware');
+const { register, login, getUserProfileData, findUserById, contactRequest } = require('../../api/service/userService');
 
 const {
     BadRequestError,
@@ -76,6 +77,30 @@ router.post('/login', async (req, res, next) => {
         }
 
         next(error);
+    }
+});
+
+router.get('/info/:userId', authenticate, async (req, res, next) => {
+    try {
+        const targetUserId = req.params['userId'];
+        const userId = req.user.userId;
+
+        const targetUserData = await getUserProfileData(userId, targetUserId);
+        res.status(200).json(targetUserData);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post('/:userId', authenticate, async (req, res, next) => {
+    try {
+        const targetUserId = req.params['userId'];
+        const userId = req.user.userId;
+
+        const notificationId = await contactRequest(userId, targetUserId);
+        res.status(201).json({ notificationId });
+    } catch (error) {
+        next(error)
     }
 });
 

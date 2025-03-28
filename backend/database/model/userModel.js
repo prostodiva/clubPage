@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,                     //it means required validation
+        required: true,
     },
     password: {
         type: String,
@@ -39,6 +39,6 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-const User = mongoose.model('User', userSchema);        //creates a mongoose model called User
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

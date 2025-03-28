@@ -1,5 +1,4 @@
 const mongoose = require('../../config/databaseConfig')
-const Announcement = require("./announcementModel");
 const Schema = mongoose.Schema;
 
 const NotificationSchema = new Schema({

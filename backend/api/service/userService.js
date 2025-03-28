@@ -1,4 +1,6 @@
 const User = require('../../database/model/userModel')
+const Association = require('../../database/model/associationModel')
+const Notification = require('../../database/model/notificationModel')
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { BadRequestError, DuplicateUserError, NotFoundError, PasswordValidationError } = require("../../api/errors/errors");
@@ -69,19 +71,90 @@ async function login(email, password) {
     );
 }
 
-async function getAllUsers() {
-    const users = await User.find({});
+async function findUserById(userId) {
+    const user = await User.findById(userId).exec()
 
-    const safeUsers = users.map(user => ({
-        id: user._id,
-        email: user.email,
-        name: user.name,
-        associations: user.associations
-    }));
+    if (!user) {
+        throw new NotFoundError('User does not exist');
+    }
 
-return safeUsers;
+    return user;
+}
+
+async function getUserProfileData(userId, targetUserId) {
+
+    let user = await User.findOne({ _id: userId }).exec();
+    let targetUser = await User.findOne({ _id: targetUserId}).exec();
+
+    if (!user) {
+        throw new NotFoundError('User does not exist');
+    }
+
+    if (!targetUser) {
+        throw new NotFoundError('User does not exist');
+    }
+
+    let userAssociationsPromises = user.associations.map(association => Association.findOne({ _id: association._id }));
+    let userAssociations = await Promise.all(userAssociationsPromises);
+
+    userAssociations = userAssociations.map(association => association.clubId.toString())
+
+    let targetUserAssociationsPromises = targetUser.associations.map(associaition => Association.findOne({ _id: associaition._id }));
+
+    let targetUserAssociations = await Promise.all(targetUserAssociationsPromises)
+
+    targetUserAssociations = targetUserAssociations.map(association => association.clubId.toString())
+
+    let commonClubIds = (targetUserAssociations && userAssociations && targetUserAssociations.length > 0 && userAssociations.length > 0)
+        ? targetUserAssociations.filter(value => userAssociations.includes(value)) : []
+
+    return {
+        userId: targetUser._id,
+        name: targetUser.name,
+        email: targetUser.email,
+        profileImageUrl: targetUser.profileImageUrl,
+        commonClubIds: commonClubIds
+    }
+}
+
+async function contactRequest(userId, targetUserId) {
+    const user = await User.findById(userId).exec();
+    const targetUser = await User.findById(targetUserId).exec();
+
+    if (!user) {
+        throw new NotFoundError(`User not found with id - ${userId}`);
+    }
+    if (!targetUser) {
+        throw new NotFoundError(`User not found with id - ${targetUserId}`);
+    }
+
+    const BASE_URL = process.env.BASE_URL;
+
+    const message = `📩 ${user.name} has requested to get in contact with you.\n\nClick to view their profile: ${BASE_URL}users/${userId}`;
+
+    const notification = new Notification({
+        recipient: targetUserId,
+        sender: userId,
+        message,
+        entityType: 'ContactRequest'
+    });
+
+    const savedNotification = await notification.save();
+
+    return savedNotification._id;
 }
 
 
 
-module.exports = { register, login, getAllUsers };
+module.exports = { register, login, getUserProfileData, findUserById, contactRequest };
+
+
+
+
+
+
+
+
+
+
+
