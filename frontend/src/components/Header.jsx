@@ -8,8 +8,8 @@ import {useAuth} from "@/context/AuthContext.jsx";
 const Header = () => {
     const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false)
 
-    const isLoggedIn = false
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
+    const isLoggedIn = !!user;
 
     const handleLogout = () => {
         console.log("logged out");
@@ -79,12 +79,19 @@ const Header = () => {
                 </div>
                 <div className="auth-buttons">
                     {isLoggedIn ? (
-                        <button className="logout-button"
-                                onClick={handleLogout}
-                                type="button"
+                        <>
+                            <Link to="/dashboard" className="dashboard-button">
+                                Dashboard
+                            </Link>
+                            <button
+                            className="logout-button"
+                            onClick={handleLogout}
+                            type="button"
                         >
                             Sign Out
                         </button>
+                        </>
+
                     ) : (
                         <>
                             <Link to="/login" className="login-button">

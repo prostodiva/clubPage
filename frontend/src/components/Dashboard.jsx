@@ -10,12 +10,6 @@ const Dashboard = () => {
                     <Card>
                         <h1>Dashboard page</h1>
                     </Card>
-                    <div className="dash-buttons">
-                            <button className="logout-button">Sign Out</button>
-                    </div>
-                    <div className="dash-buttons">
-                            <button className="dash-button">Dashboard</button>
-                    </div>
                 </main>
             </section>
         )

@@ -350,3 +350,44 @@ button.login-button:hover {
     z-index: 100 !important;
 }
 
+
+.dash-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-left: auto;
+}
+
+.logout-button {
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: 1px solid white;
+    background: none;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.logout-button:hover {
+    background-color: white;
+    color: #1f2936;
+}
+
+
+.dashboard-button {
+    background-color: #4f46e5; /* Indigo color */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.dashboard-button:hover {
+    background-color: #4338ca; /* Darker indigo on hover */
+}
