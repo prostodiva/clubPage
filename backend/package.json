@@ -1,7 +1,7 @@
 {
   "name": "clubpage-api",
   "version": "0.1.0",
-  "description": "\"Backend API server for ClubPage application providing user authentication, club management, and data services\"",
+  "description": "Backend API server for ClubPage application providing user authentication, club management, and data services",
   "license": "ISC",
   "author": "",
   "type": "commonjs",
@@ -18,7 +18,8 @@
     "express": "^4.18.2",
     "helmet": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.1.1"
+    "mongoose": "^8.1.1",
+    "multer": "^1.4.5-lts.2"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"

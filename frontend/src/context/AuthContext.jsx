@@ -1,11 +1,11 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);  // Add this line
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -13,10 +13,11 @@ export const AuthProvider = ({ children }) => {
             // Check for stored token on mount
             const token = localStorage.getItem('token');
             if (token) {
-                // Set user data from token
+                // Decode the token to get userId
+                const payload = JSON.parse(atob(token.split('.')[1]));
                 setUser({
                     token,
-                    // Add other user data as needed
+                    userId: payload.userId
                 });
             }
         } catch (error) {
@@ -33,13 +34,16 @@ export const AuthProvider = ({ children }) => {
                 throw new Error('No token provided');
             }
 
+            // Decode the token to get userId
+            const payload = JSON.parse(atob(userData.token.split('.')[1]));
+
             // Store token in localStorage
             localStorage.setItem('token', userData.token);
 
-            // Set user data
+            // Set user data with userId
             setUser({
                 token: userData.token,
-                // Add other user data as needed
+                userId: payload.userId
             });
         } catch (error) {
             console.error('Error during login:', error);
@@ -61,7 +65,7 @@ export const AuthProvider = ({ children }) => {
         user,
         login,
         logout,
-        loading     // Add this to the context value
+        loading
     };
 
     return (

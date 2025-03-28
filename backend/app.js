@@ -12,6 +12,8 @@ securityMiddleware(app);
 app.use(cors());                                            //Enable CORS for all routes
 app.use(express.json());                                    //Parse incoming requests with JSON payloads
 
+app.use('/uploads', express.static('uploads'));
+
 app.use('/users', userRoutes);                              //Mount user routes at /users path
 app.use('/clubs', clubRoutes);
 

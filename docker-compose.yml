@@ -24,6 +24,7 @@ services:
     volumes:
       - ./backend:/app
       - backend_node_modules:/app/node_modules
+      - ./backend/uploads:/app/uploads
     environment:
       - MONGO_URI=mongodb://mongo:27017/clubpage
       - PORT=8080
