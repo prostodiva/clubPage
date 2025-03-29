@@ -18,8 +18,12 @@ export default defineConfig({
   root: process.cwd(),
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': path.resolve(__dirname, './src'),
+      'motion': path.resolve(__dirname, 'node_modules/motion')
     },
     extensions: ['.js', '.jsx', '.json']
+  },
+  optimizeDeps: {
+    include: ['motion']
   }
 })

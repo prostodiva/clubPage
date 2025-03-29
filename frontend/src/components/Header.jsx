@@ -1,9 +1,25 @@
 "use client"
 
+import logo from '../assets/logo.png';
 import { Link } from "react-router-dom"
 import "../styles/header.css"
 import { useState } from "react"
 import {useAuth} from "@/context/AuthContext.jsx";
+import { animate } from "https://cdn.jsdelivr.net/npm/motion@12.6.2/+esm";
+
+const handleLogoHover = (isHovering) => {
+    if (isHovering) {
+        animate(".logoAnimation", {
+            scale: [1,1.5,1],
+            duration: 1,
+            ease: "elastic"
+        });
+    } else {
+        animate(".logoAnimation", {
+            scale: 0
+        })
+    }
+};
 
 const Header = () => {
     const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false)
@@ -20,9 +36,15 @@ const Header = () => {
         <header className="header">
             <div className="header-container">
                 <div className="left-section">
-                    <Link to="/" className="nav-link font-bold">
-                        GCC CS Club
-                    </Link>
+                    <div
+                        className="logoAnimation"
+                        onMouseEnter={() => handleLogoHover(true)}
+                        style={{ cursor: "pointer" }}
+                    >
+                        <Link to="/" className="nav-link font-bold">
+                            <img src={logo || "/placeholder.svg"} alt="logo" className="logo"></img>
+                        </Link>
+                    </div>
 
                     {/* Use a simple div-based navigation instead of Radix UI */}
                     <div className="nav-menu">

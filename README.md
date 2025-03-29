@@ -161,7 +161,7 @@ npm install -D eslint@9.9.1 eslint-config-prettier@9.1.0
     npm init  //navigate to backend. this will create the package.json
 give a name. ex "name": "clubpage-api" and answer all the questions. you can skip some of them.
   - Install dependencies: express, mongoose, cors, dotenv, jsonwebtoken, bcrypt
-    npm install express mongoose cors dotenv jsonwebtoken bcrypt
+    npm install express mongoose cors dotenv jsonwebtoken bcrypt nodemon
 that will install node_modules library and will add dependencies to the package.json that was created.
 - Set up environment configuration (.env)
 cd backend

@@ -7,6 +7,9 @@ COPY package*.json ./
 
 # Clean and install in one layer to reduce size
 RUN npm cache clean --force && \
+    npm install --no-audit && \
+    npm install motion@12.6.2 --save && \
+    ls -la node_modules/motion && \
     npm install --legacy-peer-deps --no-audit --production=false && \
     npm cache clean --force
 
