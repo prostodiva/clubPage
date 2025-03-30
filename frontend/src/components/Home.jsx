@@ -1,5 +1,20 @@
 import '../styles/home.css';
 import homeImage from '../static/images/background.jpg';
+import { animate } from "https://cdn.jsdelivr.net/npm/motion@12.6.2/+esm";
+
+const handleJoinHoover = (isHovering) => {
+    if (isHovering) {
+        animate(".hero-button", {
+            scale: [1, 1.5, 1],
+            duration: 1,
+            ease: "elastic"
+        });
+    } else {
+        animate(".bounce", {
+            scale: 0
+        })
+    }
+};
 
 const Home = () => {
     try {
@@ -28,7 +43,11 @@ const Home = () => {
                         <p className="text-xl mb-8">
                             Empowering GCC students in computer science
                         </p>
-                        <button className="hero-button">
+                        <button
+                            className="hero-button"
+                            onMouseEnter={() => handleJoinHoover (true)}
+                            style={{ cursor: "pointer" }}
+                        >
                             Join Now
                         </button>
                     </div>

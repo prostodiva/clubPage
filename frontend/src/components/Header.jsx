@@ -10,14 +10,10 @@ import { animate } from "https://cdn.jsdelivr.net/npm/motion@12.6.2/+esm";
 const handleLogoHover = (isHovering) => {
     if (isHovering) {
         animate(".logoAnimation", {
-            scale: [1,1.5,1],
+            scale: [1, 1.2, 1],
             duration: 1,
-            ease: "elastic"
+            ease: "easeInOut"
         });
-    } else {
-        animate(".logoAnimation", {
-            scale: 0
-        })
     }
 };
 
@@ -41,7 +37,7 @@ const Header = () => {
                         onMouseEnter={() => handleLogoHover(true)}
                         style={{ cursor: "pointer" }}
                     >
-                        <Link to="/" className="nav-link font-bold">
+                        <Link to="/" className="logo">
                             <img src={logo || "/placeholder.svg"} alt="logo" className="logo"></img>
                         </Link>
                     </div>
@@ -51,7 +47,10 @@ const Header = () => {
                         <ul className="nav-list">
                             <li className="nav-item">
                                 {/* Toggle dropdown on click */}
-                                <button className="nav-link-about" onClick={() => setAboutDropdownOpen(!aboutDropdownOpen)}>
+                                <button
+                                    className="nav-link-about"
+                                    onMouseEnter={() => setAboutDropdownOpen(!aboutDropdownOpen)}
+                                >
                                     ABOUT
                                 </button>
 
