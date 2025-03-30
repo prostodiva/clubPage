@@ -1,3 +1,5 @@
+@import url('fonts.css');
+
 footer {
     width: 100%;
     text-align: left;
@@ -5,5 +7,6 @@ footer {
     background: linear-gradient(to right, #131210 0%, #131210 100%);
     color: white;
     border-bottom: 0.5px solid rgb(226, 216, 216);
+    font-family: "JetBrainsMono-Bold", sans-serif;
 }
 

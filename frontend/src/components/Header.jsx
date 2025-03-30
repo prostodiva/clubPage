@@ -1,5 +1,6 @@
 "use client"
 
+import "../styles/fonts.css"
 import logo from '../assets/logo.png';
 import { Link } from "react-router-dom"
 import "../styles/header.css"
