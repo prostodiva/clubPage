@@ -1,5 +1,5 @@
 import '../styles/home.css';
-import homeImage from '../static/images/background.jpg';
+import homeImage from '../static/images/background2.jpg';
 import { animate } from "https://cdn.jsdelivr.net/npm/motion@12.6.2/+esm";
 
 const handleJoinHoover = (isHovering) => {
@@ -23,7 +23,7 @@ const Home = () => {
             <section
                 className="hero-section"
                 style={{
-                    minHeight: "calc(85vh - 64px)",
+                    minHeight: "calc(100vh - 64px)",
                     backgroundImage: `url(${homeImage})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",

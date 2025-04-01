@@ -54,3 +54,10 @@
 .hero-button:hover {
     background-color: #f3f4f6;
 }
+
+.announcement-section {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    background-color: #fbf7f7;
+}
