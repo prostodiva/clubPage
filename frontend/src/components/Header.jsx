@@ -1,7 +1,7 @@
 "use client"
 
 import "../styles/fonts.css"
-import logo from '../assets/logo.png';
+import logo from '../assets/logo1.png';
 import { Link } from "react-router-dom"
 import "../styles/header.css"
 import { useState } from "react"
@@ -47,31 +47,30 @@ const Header = () => {
                     <div className="nav-menu">
                         <ul className="nav-list">
                             <li className="nav-item">
-                                {/* Toggle dropdown on click */}
                                 <button
                                     className="nav-link-about"
                                     onMouseEnter={() => setAboutDropdownOpen(!aboutDropdownOpen)}
                                 >
                                     ABOUT
                                 </button>
-
-                                {/* Show dropdown based on state */}
                                 {aboutDropdownOpen && (
-                                    <div className="dropdown-content-wrapper">
+                                    <div className="dropdown-content-wrapper"
+                                         onMouseLeave={() => setAboutDropdownOpen(false)}
+                                    >
                                         <ul className="dropdown-content">
                                             <li>
                                                 <Link to="/mission" className="dropdown-link">
-                                                    Our Mission
+                                                    mission
                                                 </Link>
                                             </li>
                                             <li>
                                                 <Link to="/team" className="dropdown-link">
-                                                    Our Team
+                                                    team
                                                 </Link>
                                             </li>
                                             <li>
                                                 <Link to="/members" className="dropdown-link">
-                                                    Members
+                                                    members
                                                 </Link>
                                             </li>
                                         </ul>
@@ -110,17 +109,17 @@ const Header = () => {
                             onClick={handleLogout}
                             type="button"
                         >
-                            Sign Out
+                            SIGN OUT
                         </button>
                         </>
 
                     ) : (
                         <>
                             <Link to="/login" className="login-button">
-                                Login
+                                LOGIN
                             </Link>
                             <Link to="/register" className="register-button">
-                                Register
+                                REGISTER
                             </Link>
                         </>
                     )}

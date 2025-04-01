@@ -27,12 +27,14 @@
     padding: 5rem;
     text-align: center;
     color: #1f2936;
+    font-family: 'JetBrainsMono-Bold', sans-serif;
+    line-height: 1;
 }
 
 .hero-content h1 {
     font-size: 3rem;
     font-weight: bold;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     color: #e3e3e3;
 }
 
@@ -59,5 +61,6 @@
     width: 100%;
     height: 200px;
     position: relative;
-    background-color: #fbf7f7;
+    background:  black;
+    border: 1px solid #28272c;
 }

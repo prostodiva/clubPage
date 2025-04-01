@@ -6,7 +6,7 @@ footer {
     padding: 10px;
     background: linear-gradient(to right, #131210 0%, #131210 100%);
     color: white;
-    border-bottom: 0.5px solid rgb(226, 216, 216);
+    border-top: 1px solid #28272c;
     font-family: "JetBrainsMono-Bold", sans-serif;
 }
 
