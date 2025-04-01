@@ -22,7 +22,10 @@
 .left-section {
     display: flex;
     align-items: center;
-    gap: 2rem
+    gap: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
 }
 
 .logo {
@@ -163,9 +166,8 @@
     display: flex;
     gap: 1rem;
     align-items: center;
-    margin-left: auto;
+    margin-right: auto;
     font-family: "JetBrainsMono-Italic", monospace;
-    font-weight: 600;
 }
 
 .login-button {

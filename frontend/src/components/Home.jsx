@@ -1,6 +1,7 @@
 import '../styles/home.css';
 import homeImage from '../static/images/background3.jpg';
 import { animate } from "https://cdn.jsdelivr.net/npm/motion@12.6.2/+esm";
+import Announcement from "@/components/Announcement.jsx";
 
 const handleJoinHoover = (isHovering) => {
     if (isHovering) {
@@ -27,7 +28,7 @@ const Home = () => {
                     backgroundImage: `url(${homeImage})`,
                     backgroundSize: "50%",
                     backgroundColor: "black",
-                    backgroundPosition: "53% bottom",
+                    backgroundPosition: "53% 1%",
                     backgroundRepeat: "no-repeat",
                     position: "relative",
                     width: "100%",
