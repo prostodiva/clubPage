@@ -7,7 +7,7 @@ const announcements = [
         id: 1,
         title: "Announcement",
         date: Date,
-        content: "the content",
+        content: "the content example/the content example/the content example/the content example",
         priority: "high"
     },
 ];

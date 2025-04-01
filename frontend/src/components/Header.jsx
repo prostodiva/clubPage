@@ -102,7 +102,7 @@ const Header = () => {
                     {isLoggedIn ? (
                         <>
                             <Link to="/dashboard" className="dashboard-button">
-                                Dashboard
+                                DASHBOARD
                             </Link>
                             <button
                             className="logout-button"
