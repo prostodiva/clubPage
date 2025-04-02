@@ -66,3 +66,59 @@
     background:  black;
     border: 1px solid #28272c;
 }
+
+
+.mission {
+    position: relative;
+    background:  black;
+    border: 1px solid black;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mission-title {
+    font-size: 30px;
+    font-family: "JetBrainsMono-ExtraLightItalic", sans-serif;
+    position: absolute;
+    color:  white;
+    font-weight: 400;
+    font-style: normal;
+    margin-right: 15%;
+    margin-top: 1%;
+}
+
+.mission-paragraph {
+    font-size: 17px;
+    font-family: "JetBrainsMono-ExtraLightItalic", sans-serif;
+    position: absolute;
+    color:  #8a8f98;
+    font-weight: 400;
+    font-style: normal;
+    margin-right: 20%;
+    margin-top: 5%;
+    line-height: 1.5;
+}
+
+.mission-pic {
+    position: relative;
+    width: 25%;
+    height: auto;
+    color: transparent;
+    flex-shrink: 0;
+    margin-left: 20%;
+    filter: grayscale(100%);
+}
+
+.team {
+    position: relative;
+    background:  black;
+    border: 1px solid black;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

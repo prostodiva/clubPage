@@ -5,6 +5,9 @@ import LoginPage from "./pages/LoginPage.jsx";
 import EventsPage from "./pages/EventsPage.jsx";
 import MeetingsPage from "./pages/MeetingsPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
+import Mission from "./components/Mission.jsx";
+import Team from "./components/Team.jsx";
+import Members from "./components/Members.jsx";
 
 const AppRoutes = () => {
     console.log('App rendering');
@@ -18,6 +21,10 @@ const AppRoutes = () => {
             <Route path="/meetings" element={<MeetingsPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/join" element={<Navigate to="/register" replace />} />
+            <Route path="/mission" element={<Mission />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/members" element={<Members />} />
+
         </Routes>
     );
 };
