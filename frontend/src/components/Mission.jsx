@@ -11,7 +11,7 @@ const pic = [
 
 const Mission = () => {
     return (
-        <section className="mission">
+        <section className="mission" id="mission-section">
             <div>
                 <h1 className="mission-title">MISSION</h1>
             </div>

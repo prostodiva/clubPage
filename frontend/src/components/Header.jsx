@@ -7,6 +7,7 @@ import "../styles/header.css"
 import { useState } from "react"
 import {useAuth} from "@/context/AuthContext.jsx";
 import { animate } from "https://cdn.jsdelivr.net/npm/motion@12.6.2/+esm";
+import { Button } from "../components/ui/button.jsx";
 
 const handleLogoHover = (isHovering) => {
     if (isHovering) {
@@ -18,6 +19,7 @@ const handleLogoHover = (isHovering) => {
     }
 };
 
+
 const Header = () => {
     const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false)
 
@@ -28,6 +30,26 @@ const Header = () => {
         console.log("logged out");
         logout();
     };
+
+    const scrollToTeam = () => {
+        const teamSection = document.getElementById('team-section');
+        const headerHeight = 64;
+
+        window.scrollTo({
+            top: teamSection.offsetTop - headerHeight,
+            behavior: 'smooth'
+        });
+    };
+
+    const scrollToMission = () => {
+        const missionSection = document.getElementById('mission-section');
+        const headerHeight = 64;
+
+        window.scrollTo({
+            top: missionSection.offsetTop - headerHeight,
+            behavior: 'smooth'
+        })
+    }
 
     return (
         <header className="header">
@@ -59,14 +81,14 @@ const Header = () => {
                                     >
                                         <ul className="dropdown-content">
                                             <li>
-                                                <Link to="/mission" className="dropdown-link">
+                                                <Button onClick={scrollToMission} className="dropdown-link">
                                                     mission
-                                                </Link>
+                                                </Button>
                                             </li>
                                             <li>
-                                                <Link to="/team" className="dropdown-link">
+                                                <Button className="dropdown-link" onClick={scrollToTeam}>
                                                     team
-                                                </Link>
+                                                </Button>
                                             </li>
                                             <li>
                                                 <Link to="/members" className="dropdown-link">

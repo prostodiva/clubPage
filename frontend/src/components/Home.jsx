@@ -26,9 +26,9 @@ const Home = () => {
                 style={{
                     minHeight: "calc(95vh - 64px)",
                     backgroundImage: `url(${homeImage})`,
-                    backgroundSize: "50%",
+                    backgroundSize: "60%",
                     backgroundColor: "black",
-                    backgroundPosition: "53% 1%",
+                    backgroundPosition: "53% 45%",
                     backgroundRepeat: "no-repeat",
                     position: "relative",
                     width: "100%",

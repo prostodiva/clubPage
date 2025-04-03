@@ -72,7 +72,7 @@
     position: relative;
     background:  black;
     border: 1px solid black;
-    height: 400px;
+    height: 600px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -121,4 +121,5 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-family: "JetBrainsMono-Italic", monospace;
 }
