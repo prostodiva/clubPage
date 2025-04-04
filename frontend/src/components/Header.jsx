@@ -69,12 +69,12 @@ const Header = () => {
                     <div className="nav-menu">
                         <ul className="nav-list">
                             <li className="nav-item">
-                                <button
+                                <Link to="/home"
                                     className="nav-link-about"
                                     onMouseEnter={() => setAboutDropdownOpen(!aboutDropdownOpen)}
                                 >
                                     ABOUT
-                                </button>
+                                </Link>
                                 {aboutDropdownOpen && (
                                     <div className="dropdown-content-wrapper"
                                          onMouseLeave={() => setAboutDropdownOpen(false)}
