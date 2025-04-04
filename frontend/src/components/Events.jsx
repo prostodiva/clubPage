@@ -3,6 +3,7 @@ import { Card } from '../components/ui/card';
 import eventWorkshop from '../static/images/events.jpg';
 import eventHack from '../static/images/hack.jpg';
 import eventCoffee from '../static/images/coffee.jpg';
+import { Link } from "react-router-dom";
 
 const upcomingEvents = [
     {
@@ -11,7 +12,8 @@ const upcomingEvents = [
         date: '2025-04-15',
         description: '24-hour coding challenge with amazing prizes',
         category: 'Competition',
-        image: eventHack
+        image: eventHack,
+        url: "https://mlh.io/seasons/2025/events"
     },
     {
         id: 2,
@@ -43,12 +45,33 @@ const Events = () => {
                 {upcomingEvents.map((event) => (
                     <Card key={event.id} className="overflow-hidden">
                         <div className="relative h-48">
-                            <img src={event.image || "/placeholder.svg"} alt={event.title} className="absolute inset-0 w-full h-full object-cover"/>
-                            <div className="absolute top-4 right-4">
-                                <span className="px-3 py-1 bg-white/90 rounded-full text-sm font-medium">
-                                    {event.category}
-                                </span>
-                            </div>
+                            {event.url ? (
+                                <a href={event.url} target="_blank" rel="noopener noreferrer">
+                                    <img
+                                        src={event.image || "/placeholder.svg"}
+                                        alt={event.title}
+                                        className="absolute inset-0 w-full h-full object-cover"
+                                    />
+                                    <div className="absolute top-4 right-4">
+                                        <span className="px-3 py-1 bg-white/90 rounded-full text-sm font-medium">
+                                            {event.category}
+                                        </span>
+                                    </div>
+                                </a>
+                            ) : (
+                                <>
+                                    <img
+                                        src={event.image || "/placeholder.svg"}
+                                        alt={event.title}
+                                        className="absolute inset-0 w-full h-full object-cover"
+                                    />
+                                    <div className="absolute top-4 right-4">
+                                        <span className="px-3 py-1 bg-white/90 rounded-full text-sm font-medium">
+                                            {event.category}
+                                        </span>
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <div className="p-6">
                             <h3 className="font-semibold text-xl mb-2">{event.title}</h3>

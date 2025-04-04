@@ -16,7 +16,6 @@ const HomePage = () => {
                     <Announcement />
                     <Mission />
                     <Team />
-                    <Members />
                 </main>
                 <Footer />
             </div>
