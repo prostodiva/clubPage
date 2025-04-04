@@ -81,12 +81,12 @@ const Header = () => {
                                     >
                                         <ul className="dropdown-content">
                                             <li>
-                                                <Button onClick={scrollToMission} className="dropdown-link">
+                                                <Button onClick={scrollToMission} className="dropdown-link" to="/mission">
                                                     mission
                                                 </Button>
                                             </li>
                                             <li>
-                                                <Button className="dropdown-link" onClick={scrollToTeam}>
+                                                <Button className="dropdown-link" onClick={scrollToTeam} to="/team">
                                                     team
                                                 </Button>
                                             </li>

@@ -81,6 +81,10 @@ async function findUserById(userId) {
     return user;
 }
 
+async function getAllUsers() {
+    return User.find().lean();
+}
+
 async function getUserProfileData(userId, targetUserId) {
 
     let user = await User.findOne({ _id: userId }).exec();
@@ -146,7 +150,7 @@ async function contactRequest(userId, targetUserId) {
 
 
 
-module.exports = { register, login, getUserProfileData, findUserById, contactRequest };
+module.exports = { register, login, getUserProfileData, findUserById, contactRequest, getAllUsers };
 
 
 

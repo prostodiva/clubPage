@@ -1,9 +1,6 @@
 const express = require('express');
 const { authenticate } = require('../middleware/securityMiddleware');
-const { register, login, getUserProfileData, findUserById, contactRequest } = require('../../api/service/userService');
-// const multer = require('multer');
-// const path = require('path');
-// const User = require('../../database/model/UserModel');
+const { register, login, getUserProfileData, findUserById, contactRequest, getAllUsers } = require('../../api/service/userService');
 
 const {
     BadRequestError,
@@ -107,50 +104,14 @@ router.post('/:userId', authenticate, async (req, res, next) => {
     }
 });
 
+router.get('/all', async (req, res, next) => {
+    try {
+        const users = await getAllUsers();
+        res.status(200).json(users);
+    } catch (error) {
+        next(error);
+    }
+});
 
-// // Configure multer for file upload
-// const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         cb(null, 'uploads/') // Make sure this directory exists
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, Date.now() + '-' + file.originalname)
-//     }
-// });
-//
-// const upload = multer({
-//     storage: storage,
-//     limits: {
-//         fileSize: 5 * 1024 * 1024 // 5MB limit
-//     },
-//     fileFilter: (req, file, cb) => {
-//         if (file.mimetype.startsWith('image/')) {
-//             cb(null, true);
-//         } else {
-//             cb(new Error('Not an image! Please upload an image.'), false);
-//         }
-//     }
-// });
-//
-//
-// router.post('/upload-image', authenticate, upload.single('image'), async (req, res) => {
-//     try {
-//         if (!req.file) {
-//             return res.status(400).json({ message: 'No file uploaded' });
-//         }
-//
-//         const imageUrl = `${process.env.BASE_URL}/uploads/${req.file.filename}`;
-//
-//         // Update user's profile image URL in database
-//         await User.findByIdAndUpdate(req.user.userId, {
-//             profileImageUrl: imageUrl
-//         });
-//
-//         res.json({ imageUrl });
-//     } catch (error) {
-//         console.error('Error uploading image:', error);
-//         res.status(500).json({ message: 'Error uploading image' });
-//     }
-// });
 
 module.exports = router;

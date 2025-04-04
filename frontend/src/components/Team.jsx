@@ -27,7 +27,10 @@ const teamLeads = [
 
 const Team = () => {
     return (
-        <section className="team py-12 px-4" id="team-section">
+        <section className="team py-12 px-4 flex flex-col gap-16" id="team-section">
+            <div>
+                <h3 className="team-title">MEET OUR TEAM</h3>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {teamLeads.map(team => (
                     <Card key={team.id} className="overflow-hidden flex flex-col shadow-lg h-[370px]">
