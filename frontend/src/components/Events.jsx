@@ -3,7 +3,6 @@ import { Card } from '../components/ui/card';
 import eventWorkshop from '../static/images/events.jpg';
 import eventHack from '../static/images/hack.jpg';
 import eventCoffee from '../static/images/coffee.jpg';
-import { Link } from "react-router-dom";
 
 const upcomingEvents = [
     {

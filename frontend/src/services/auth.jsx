@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+import { API_URL } from '../config';
 
 // Global axios interceptor for error handling
 axios.interceptors.response.use(
@@ -18,7 +17,6 @@ axios.interceptors.response.use(
 export const authService = {
     register: async (userData) => {
         try {
-            // Use API_URL constant instead of hardcoded URL
             const response = await axios.post(`${API_URL}/users/register`, userData, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -35,19 +33,8 @@ export const authService = {
 
     login: async (credentials) => {
         try {
-            console.log('Sending login request:', {
-                url: `${API_URL}/users/login`,
-                email: credentials.email
-            });
-
             const response = await axios.post(`${API_URL}/users/login`, credentials);
 
-            console.log('Login response:', {
-                status: response.status,
-                hasToken: !!response.data.token
-            });
-
-            // Check if we have a token in the response
             if (!response.data.token) {
                 throw new Error('No token received from server');
             }

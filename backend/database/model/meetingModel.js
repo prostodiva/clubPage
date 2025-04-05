@@ -5,6 +5,7 @@ const MeetingSchema = new Schema({
     title: {
         type: String,
         required: true,
+        trim: true
     },
     agenda: {
         type: String,
@@ -29,29 +30,36 @@ const MeetingSchema = new Schema({
     }],
     isActive: {
         type: Boolean,
-        default: false,
+        default: true,
+        required: true,
     },
     authorId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: true
     },
     clubId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Club',
-    },
-    createdAt: {
-        type: Date,
-        required: true,
-        default: Date.now
-    },
-    lastUpdatedAt: {
-        type: Date
+        required: true
     },
     lastUpdatedBy: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
     }
+}, {
+    timestamps: {
+        createdAt: 'createdAt',
+        updatedAt: 'updatedAt'
+    }
 });
+
+MeetingSchema.index({clubId: 1, isActive: 1});
+MeetingSchema.index({date: -1});
+
+MeetingSchema.methods.isParticipant = function (userId) {
+    return this.participants.includes(userId);
+};
 
 const Meeting = mongoose.model('Meeting', MeetingSchema);
 module.exports = Meeting;

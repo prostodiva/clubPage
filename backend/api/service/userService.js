@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { BadRequestError, DuplicateUserError, NotFoundError, PasswordValidationError } = require("../../api/errors/errors");
 
-async function register(email, password, name) {
+async function register(email, password, name, role = 'User') {
     if (!email || !password) {
         throw new BadRequestError('email and password are required');
     }
@@ -25,12 +25,12 @@ async function register(email, password, name) {
         email: email,
         password: hashedPassword,
         name: name,
+        role: role,
         associations: [],
     });
 
     await newUser.save();
     return newUser._id;
-
 }
 
 async function login(email, password) {
