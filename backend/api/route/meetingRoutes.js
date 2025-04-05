@@ -53,10 +53,21 @@ router.put('/clubs/:clubId/meetings/:meetingId', authenticate, async (req, res, 
 
 router.delete('/clubs/:clubId/meetings/:meetingId', authenticate, async (req, res, next) => {
     try {
-        await deleteMeeting(req.params.meetingId, req.params.clubId, req.user.userId);
+        const result = await deleteMeeting(
+            req.params.meetingId,
+            req.user.userId,
+            req.params.clubId
+        );
+        if (!result) {
+            return res.status(404).json({ message: 'Meeting not found' });
+        }
         res.status(204).send();
     } catch (error) {
-        next(error);
+        console.error('Delete meeting error:', error);
+        if (error.message === 'Meeting not found') {
+            return res.status(404).json({ message: 'Meeting not found' });
+        }
+        res.status(500).json({ message: error.message || 'Failed to delete meeting' });
     }
 });
 
@@ -78,6 +89,27 @@ router.get('/', async (req, res, next) => {
     try {
         const meetings = await getAllMeetingsAcrossClubs();
         res.json(meetings);
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Get a single meeting by ID (public endpoint)
+router.get('/:meetingId', async (req, res, next) => {
+    try {
+        const meeting = await Meeting.findOne({
+            _id: req.params.meetingId,
+            isActive: true,
+        })
+            .select('title agenda date location createdAt attachments participants clubId')
+            .populate('participants', 'name email')
+            .populate('clubId', 'title')
+            .exec();
+
+        if (!meeting) {
+            return res.status(404).json({ message: 'Meeting not found' });
+        }
+        res.json(meeting);
     } catch (error) {
         next(error);
     }

@@ -1,13 +1,14 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import HomePage from "./pages/HomePage.jsx";
-import RegistrationPage from "./pages/RegistrationPage.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
-import EventsPage from "./pages/EventsPage.jsx";
-import MeetingsPage from "./pages/MeetingsPage.jsx";
-import DashboardPage from "./pages/DashboardPage.jsx";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Mission from "./components/Mission.jsx";
 import Team from "./components/Team.jsx";
+import { Toaster } from "./components/ui/toaster";
+import DashboardPage from "./pages/DashboardPage.jsx";
+import EventsPage from "./pages/EventsPage.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import MeetingsPage from "./pages/MeetingsPage.jsx";
 import MembersPage from "./pages/MembersPage.jsx";
+import RegistrationPage from "./pages/RegistrationPage.jsx";
 
 const AppRoutes = () => {
     console.log('App rendering');
@@ -24,14 +25,16 @@ const AppRoutes = () => {
             <Route path="/mission" element={<Mission />} />
             <Route path="/team" element={<Team />} />
             <Route path="/members" element={<MembersPage />} />
-
         </Routes>
     );
 };
 
 const App = () => {
     return (
-                <AppRoutes />
+        <>
+            <AppRoutes />
+            <Toaster />
+        </>
     );
 };
 

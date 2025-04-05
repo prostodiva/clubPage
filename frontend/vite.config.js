@@ -15,15 +15,16 @@ export default defineConfig({
       }
     }
   },
-  root: process.cwd(),
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      'motion': path.resolve(__dirname, 'node_modules/motion')
+      'src': path.resolve(__dirname, './src')
     },
-    extensions: ['.js', '.jsx', '.json']
+    dedupe: ['@radix-ui/react-label', '@radix-ui/react-dialog', '@radix-ui/react-slot', '@radix-ui/react-toast']
   },
-  optimizeDeps: {
-    include: ['motion']
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true
+    }
   }
 })

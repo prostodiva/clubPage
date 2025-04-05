@@ -2,22 +2,22 @@ FROM node:20.11-alpine
 
 WORKDIR /app
 
-# Only copy necessary files for npm install
+# Copy package files
 COPY package*.json ./
 
-# Clean and install in one layer to reduce size
-RUN npm cache clean --force && \
-    npm install --no-audit && \
-    npm install motion@12.6.2 --save && \
-    ls -la node_modules/motion && \
-    npm install --legacy-peer-deps --no-audit --production=false && \
-    npm cache clean --force
+# Install dependencies with verbose logging and verification
+RUN npm install --legacy-peer-deps --verbose && \
+    npm list @radix-ui/react-label && \
+    npm list @radix-ui/react-dialog && \
+    npm list @radix-ui/react-slot && \
+    npm list @radix-ui/react-toast && \
+    ls -la node_modules/@radix-ui
 
-# Copy only necessary files
+# Copy the rest of the application
 COPY . .
 
 # Expose port
 EXPOSE 5173
 
-# Start app
-CMD ["npm", "run", "dev"]
+# Start app with host flag
+CMD ["npm", "run", "dev", "--", "--host"]

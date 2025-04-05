@@ -13,12 +13,14 @@ export const AuthProvider = ({ children }) => {
             // Check for stored token on mount
             const token = localStorage.getItem('token');
             if (token) {
-                // Decode the token to get userId
+                // Decode the token to get userId and role
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 setUser({
                     token,
-                    userId: payload.userId
+                    userId: payload.userId,
+                    role: payload.role
                 });
+                console.log('Token payload:', payload);
             }
         } catch (error) {
             console.error('Error loading auth state:', error);
@@ -34,16 +36,18 @@ export const AuthProvider = ({ children }) => {
                 throw new Error('No token provided');
             }
 
-            // Decode the token to get userId
+            // Decode the token to get userId and role
             const payload = JSON.parse(atob(userData.token.split('.')[1]));
+            console.log('Login payload:', payload);
 
             // Store token in localStorage
             localStorage.setItem('token', userData.token);
 
-            // Set user data with userId
+            // Set user data with userId and role
             setUser({
                 token: userData.token,
-                userId: payload.userId
+                userId: payload.userId,
+                role: payload.role
             });
         } catch (error) {
             console.error('Error during login:', error);
