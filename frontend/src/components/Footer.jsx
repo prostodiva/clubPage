@@ -31,7 +31,7 @@ const Footer = () => {
                         <h3 className="text-lg font-semibold mb-4">Contact</h3>
                         <p className="text-gray-400">
                             Email: csclub@gcc.edu<br />
-                            Location: Room 123, CS Building
+                            Location: 1500 N Verdugo Rd, Glendale, CA, 91208
                         </p>
                     </div>
                 </div>

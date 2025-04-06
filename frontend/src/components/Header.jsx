@@ -51,6 +51,10 @@ const Header = () => {
         })
     }
 
+    const handleJoinClick = () => {
+        window.open('https://docs.google.com/forms/d/e/1FAIpQLSf2ixtflO5nFqhLUgOVfIwnnEEowW79q8QctsWTpGUHRwECCg/viewform?usp=header', '_blank', 'noopener,noreferrer');
+    };
+
     return (
         <header className="header">
             <div className="header-container">
@@ -113,9 +117,10 @@ const Header = () => {
                             </li>
 
                             <li className="nav-item">
-                                <Link to="/join" className="nav-link">
+                                <Button className="nav-link"
+                                        onClick={handleJoinClick}>
                                     JOIN
-                                </Link>
+                                </Button>
                             </li>
                         </ul>
                     </div>

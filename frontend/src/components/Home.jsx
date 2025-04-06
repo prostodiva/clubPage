@@ -1,7 +1,6 @@
-import '../styles/home.css';
-import homeImage from '../static/images/background3.jpg';
 import { animate } from "https://cdn.jsdelivr.net/npm/motion@12.6.2/+esm";
-import Announcement from "@/components/Announcement.jsx";
+import homeImage from '../static/images/background3.jpg';
+import '../styles/home.css';
 
 const handleJoinHoover = (isHovering) => {
     if (isHovering) {
@@ -18,6 +17,10 @@ const handleJoinHoover = (isHovering) => {
 };
 
 const Home = () => {
+    const handleJoinClick = () => {
+        window.open('https://docs.google.com/forms/d/e/1FAIpQLSf2ixtflO5nFqhLUgOVfIwnnEEowW79q8QctsWTpGUHRwECCg/viewform?usp=header', '_blank', 'noopener,noreferrer');
+    };
+
     try {
         console.log('Home component rendering');
         return (
@@ -46,8 +49,9 @@ const Home = () => {
                             Empowering GCC students in computer science
                         </p>
                         <button
+                            onClick={handleJoinClick}
                             className="hero-button"
-                            onMouseEnter={() => handleJoinHoover (true)}
+                            onMouseEnter={() => handleJoinHoover(true)}
                             style={{ cursor: "pointer" }}
                         >
                             Join Now
@@ -57,8 +61,8 @@ const Home = () => {
             </section>
         );
     } catch (error) {
-        console.error('Error in Hero component:', error);
-        throw error;
+        console.error('Error in Home component:', error);
+        return null;
     }
 };
 

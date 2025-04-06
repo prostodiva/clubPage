@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { meetingService } from '../services/meetingService';
 import { Button } from './ui/button';
@@ -23,7 +24,6 @@ const EditMeetingDialog = ({ meeting, onSave, onClose, open }) => {
             onClose();
         } catch (error) {
             console.error('Error in EditMeetingDialog:', error);
-            // Let the parent component handle the error
             throw error;
         }
     };
@@ -106,21 +106,16 @@ const Meetings = () => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const { user } = useAuth();
+    const navigate = useNavigate();
 
-    // Debug logging
-    console.log('Raw user object:', user);
-    console.log('User token:', user?.token);
+    useEffect(() => {
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+    }, [user, navigate]);
+
     const isAdmin = user?.role === 'Admin';
-    console.log('User role:', user?.role);
-    console.log('Is admin:', isAdmin);
-
-    const showToast = useCallback((type, message) => {
-        toast({
-            title: type === 'success' ? 'Success' : 'Error',
-            description: message,
-            variant: type === 'success' ? 'default' : 'destructive'
-        });
-    }, []);
 
     const fetchMeetings = async () => {
         try {
@@ -137,10 +132,21 @@ const Meetings = () => {
     };
 
     useEffect(() => {
-        fetchMeetings();
-    }, []);
+        if (user) {
+            fetchMeetings();
+        }
+    }, [user]);
 
     const handleCreateMeeting = useCallback(async (formData) => {
+        if (!user?.token) {
+            toast({
+                title: "Error",
+                description: "You must be logged in to create a meeting",
+                variant: "destructive"
+            });
+            return;
+        }
+
         try {
             const meetingData = {
                 title: formData.get('title'),
@@ -150,7 +156,6 @@ const Meetings = () => {
                 attachments: []
             };
             
-            // Let meetingService handle getting the club ID
             await meetingService.createMeeting(meetingData, user.token);
             await fetchMeetings();
             setDialogOpen(false);
@@ -160,7 +165,6 @@ const Meetings = () => {
             });
         } catch (error) {
             console.error('Create meeting error:', error);
-            // Show a more specific error message if it's club-related
             const errorMessage = error.message.includes('club')
                 ? error.message
                 : "Failed to create meeting. Please try again.";
@@ -171,9 +175,18 @@ const Meetings = () => {
                 variant: "destructive"
             });
         }
-    }, [user.token, fetchMeetings]);
+    }, [user?.token, fetchMeetings]);
 
     const handleDelete = useCallback(async (meetingId) => {
+        if (!user?.token) {
+            toast({
+                title: "Error",
+                description: "You must be logged in to delete a meeting",
+                variant: "destructive"
+            });
+            return;
+        }
+
         if (!window.confirm('Are you sure you want to delete this meeting?')) {
             return;
         }
@@ -203,9 +216,18 @@ const Meetings = () => {
                 variant: "destructive"
             });
         }
-    }, [meetings, user.token]);
+    }, [meetings, user?.token]);
 
     const handleUpdate = useCallback(async (meetingId, updatedData) => {
+        if (!user?.token) {
+            toast({
+                title: "Error",
+                description: "You must be logged in to update a meeting",
+                variant: "destructive"
+            });
+            return;
+        }
+
         try {
             const meeting = meetings.find(m => m._id === meetingId);
             if (!meeting?.clubId?._id) {
@@ -220,7 +242,7 @@ const Meetings = () => {
             await meetingService.updateMeeting(
                 meetingId,
                 meeting.clubId._id,
-                { ...updatedData, attachments: [] }, // Add empty attachments array as it's required by backend
+                { ...updatedData, attachments: [] },
                 user.token
             );
 
@@ -245,7 +267,11 @@ const Meetings = () => {
                 variant: "destructive"
             });
         }
-    }, [meetings, user.token]);
+    }, [meetings, user?.token]);
+
+    if (!user) {
+        return null; // Will redirect to login
+    }
 
     return (
         <section className="meetings py-16 px-4">
@@ -296,7 +322,7 @@ const Meetings = () => {
                                         <Input
                                             id="date"
                                             name="date"
-                                            type="datetime-local"
+                                            type="date"
                                             required
                                             className="w-full bg-white border-gray-300"
                                         />
