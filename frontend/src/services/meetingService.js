@@ -36,12 +36,13 @@ export const meetingService = {
         try {
             if (!clubId) {
                 // First try to get the club ID from the user's first club
-                const response = await axios.get(`${API_URL}/clubs`, {
+                const response = await axios.get(`${API_URL}/clubs/all`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 const clubs = response.data;
+                console.log(clubs);
                 if (!clubs || clubs.length === 0) {
                     throw new Error('No clubs found. Please create a club first.');
                 }
@@ -49,7 +50,7 @@ export const meetingService = {
             }
 
             const response = await axios.post(
-                `${API_URL}/clubs/${clubId}/meetings`,
+                `${API_URL}/meetings/clubs/${clubId}/meetings`,
                 meetingData,
                 {
                     headers: {

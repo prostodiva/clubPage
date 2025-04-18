@@ -7,7 +7,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
-import { toast } from './ui/use-toast';
 
 const EditMeetingDialog = ({ meeting, onSave, onClose, open }) => {
     const [formData, setFormData] = useState({
@@ -139,11 +138,7 @@ const Meetings = () => {
 
     const handleCreateMeeting = useCallback(async (formData) => {
         if (!user?.token) {
-            toast({
-                title: "Error",
-                description: "You must be logged in to create a meeting",
-                variant: "destructive"
-            });
+            console.error('Error creating meeting');
             return;
         }
 
@@ -159,31 +154,20 @@ const Meetings = () => {
             await meetingService.createMeeting(meetingData, user.token);
             await fetchMeetings();
             setDialogOpen(false);
-            toast({
-                title: "Success",
-                description: "Meeting created successfully"
-            });
+           console.log('the meeting successfully created');
         } catch (error) {
             console.error('Create meeting error:', error);
             const errorMessage = error.message.includes('club')
                 ? error.message
                 : "Failed to create meeting. Please try again.";
             
-            toast({
-                title: "Error",
-                description: errorMessage,
-                variant: "destructive"
-            });
+           console.error('error creating meeting:', error);
         }
     }, [user?.token, fetchMeetings]);
 
     const handleDelete = useCallback(async (meetingId) => {
         if (!user?.token) {
-            toast({
-                title: "Error",
-                description: "You must be logged in to delete a meeting",
-                variant: "destructive"
-            });
+            console.error('You must be logged in to delete a meeting');
             return;
         }
 
@@ -194,48 +178,28 @@ const Meetings = () => {
         try {
             const meeting = meetings.find(m => m._id === meetingId);
             if (!meeting?.clubId?._id) {
-                toast({
-                    title: "Error",
-                    description: "Could not find club ID for this meeting",
-                    variant: "destructive"
-                });
+                console.error('Could not find club ID for this meeting');
                 return;
             }
 
             await meetingService.deleteMeeting(meetingId, meeting.clubId._id, user.token);
             setMeetings(prevMeetings => prevMeetings.filter(m => m._id !== meetingId));
-            toast({
-                title: "Success",
-                description: "Meeting deleted successfully"
-            });
+            console.log('Meeting deleted successfully');
         } catch (error) {
             console.error('Delete meeting error:', error);
-            toast({
-                title: "Error",
-                description: error.message || "Failed to delete meeting",
-                variant: "destructive"
-            });
         }
     }, [meetings, user?.token]);
 
     const handleUpdate = useCallback(async (meetingId, updatedData) => {
         if (!user?.token) {
-            toast({
-                title: "Error",
-                description: "You must be logged in to update a meeting",
-                variant: "destructive"
-            });
+           console.log('You must be logged in to update a meeting')
             return;
         }
 
         try {
             const meeting = meetings.find(m => m._id === meetingId);
             if (!meeting?.clubId?._id) {
-                toast({
-                    title: "Error",
-                    description: "Could not find club ID for this meeting",
-                    variant: "destructive"
-                });
+                console.log('Could not find club ID for this meeting');
                 return;
             }
 
@@ -255,22 +219,15 @@ const Meetings = () => {
             );
             setEditingMeeting(null);
             setEditDialogOpen(false);
-            toast({
-                title: "Success",
-                description: "Meeting updated successfully"
-            });
+            console.log('meeting successfully updated');
         } catch (error) {
             console.error('Error updating meeting:', error);
-            toast({
-                title: "Error",
-                description: error.message || "Failed to update meeting",
-                variant: "destructive"
-            });
+            console.log('error updating meeting:', error);
         }
     }, [meetings, user?.token]);
 
     if (!user) {
-        return null; // Will redirect to login
+        return null;
     }
 
     return (

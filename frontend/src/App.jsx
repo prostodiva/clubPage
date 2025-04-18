@@ -1,7 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Mission from "./components/Mission.jsx";
 import Team from "./components/Team.jsx";
-import { Toaster } from "./components/ui/toaster";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import EventsPage from "./pages/EventsPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
@@ -33,7 +32,6 @@ const App = () => {
     return (
         <>
             <AppRoutes />
-            <Toaster />
         </>
     );
 };
