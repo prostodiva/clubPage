@@ -171,10 +171,6 @@ const Meetings = () => {
             return;
         }
 
-        if (!window.confirm('Are you sure you want to delete this meeting?')) {
-            return;
-        }
-
         try {
             const meeting = meetings.find(m => m._id === meetingId);
             if (!meeting?.clubId?._id) {

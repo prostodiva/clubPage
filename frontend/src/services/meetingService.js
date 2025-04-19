@@ -96,7 +96,7 @@ export const meetingService = {
     deleteMeeting: async (meetingId, clubId, token) => {
         try {
             await axios.delete(
-                `${API_URL}/clubs/${clubId}/meetings/${meetingId}`,
+                `${API_URL}/meetings/clubs/${clubId}/meetings/${meetingId}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`

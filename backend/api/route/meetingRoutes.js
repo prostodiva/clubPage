@@ -55,8 +55,8 @@ router.delete('/clubs/:clubId/meetings/:meetingId', authenticate, async (req, re
     try {
         const result = await deleteMeeting(
             req.params.meetingId,
-            req.user.userId,
-            req.params.clubId
+            req.params.clubId,
+            req.user.userId
         );
         if (!result) {
             return res.status(404).json({ message: 'Meeting not found' });
