@@ -3,7 +3,8 @@ const Association = require('../../database/model/associationModel')
 const Notification = require('../../database/model/notificationModel')
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { BadRequestError, DuplicateUserError, NotFoundError, PasswordValidationError } = require("../../api/errors/errors");
+const { BadRequestError, DuplicateUserError, NotFoundError, PasswordValidationError, UnauthorizedError } = require("../../api/errors/errors");
+const {ensureOwnership} = require("./authService");
 
 async function register(email, password, name, role = 'User') {
     if (!email || !password) {
@@ -151,9 +152,20 @@ async function contactRequest(userId, targetUserId) {
     return savedNotification._id;
 }
 
+const deleteUserById = async (userId) => {
+    try {
+        const deletedUser = await User.findByIdAndDelete(userId);
+        if (!deletedUser) {
+            throw new NotFoundError('User not found');
+        }
+        return deletedUser;
+    } catch (error) {
+        console.error('Delete user failed:', error);
+        throw error;
+    }
+};
 
-
-module.exports = { register, login, getUserProfileData, findUserById, contactRequest, getAllUsers };
+module.exports = { register, login, getUserProfileData, findUserById, contactRequest, getAllUsers, deleteUserById };
 
 
 

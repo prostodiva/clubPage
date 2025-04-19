@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button.jsx";
 import Axios from 'axios';
-import { Card, CardContent } from '../components/ui/card';
+import { useCallback, useEffect, useState } from 'react';
+import { Card, CardContent, CardFooter } from '../components/ui/card';
 import { useAuth } from '../context/AuthContext';
+import { memberService } from '../services/memberService.js';
 
 const Members = () => {
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const { user } = useAuth();
+    const isAdmin = user?.role === 'Admin';
 
     useEffect(() => {
         const fetchMembers = async () => {
@@ -35,11 +38,11 @@ const Members = () => {
                 setMembers(response.data);
                 setLoading(false);
             } catch (error) {
-            console.error("error fetching members: ", error);
-            setError('failed to load members');
-            setLoading(false);
-        }
-    };
+                console.error("error fetching members: ", error);
+                setError('failed to load members');
+                setLoading(false);
+            }
+        };
         if (!user) {
             setLoading(false);
             setError('please log in to view members');
@@ -47,6 +50,27 @@ const Members = () => {
             fetchMembers();
         }
     }, [user]);
+
+    const handleDelete = useCallback(async (memberId) => {
+        if (!memberId) {
+            console.error('No member ID provided for deletion');
+            return;
+        }
+
+        try {
+            const member = members.find(m => m._id === memberId);
+            if (!member) {
+                console.error('Could not find member with ID:', memberId);
+                return;
+            }
+
+            await memberService.deleteMember(memberId, user.token);
+            setMembers(prevMembers => prevMembers.filter(m => m._id !== memberId));
+            console.log('Member deleted successfully');
+        } catch (error) {
+            console.error('Delete member error:', error.message);
+        }
+    }, [members, user?.token]);
 
     return (
         <section id="members" className="members py-16 px-4">
@@ -71,7 +95,7 @@ const Members = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {members.length > 0 ? (
                         members.map((member) => (
-                            <Card key={member.id} className="overflow-hidden flex flex-col shadow-lg h-[300px]">
+                            <Card key={member._id} className="overflow-hidden flex flex-col shadow-lg h-[300px]">
                                 <div className="relative h-[180px]">
                                     <img
                                         src={member.image || "/placeholder.svg"}
@@ -84,6 +108,16 @@ const Members = () => {
                                     {member.role && <p className="text-gray-500">{member.role}</p>}
                                     {member.year && <p className="text-gray-500">Year: {member.year}</p>}
                                 </CardContent>
+                                {isAdmin && (
+                                    <CardFooter className="flex justify-end space-x-2">
+                                        <Button
+                                            variant="destructive"
+                                            onClick={() => handleDelete(member._id)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </CardFooter>
+                                )}
                             </Card>
                         ))
                     ) : (
