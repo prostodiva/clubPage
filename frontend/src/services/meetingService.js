@@ -73,7 +73,7 @@ export const meetingService = {
     updateMeeting: async (meetingId, clubId, meetingData, token) => {
         try {
             const response = await axios.put(
-                `${API_URL}/clubs/${clubId}/meetings/${meetingId}`,
+                `${API_URL}/meetings/clubs/${clubId}/meetings/${meetingId}`,
                 meetingData,
                 {
                     headers: {
