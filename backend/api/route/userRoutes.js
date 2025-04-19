@@ -86,6 +86,18 @@ router.get('/info/:userId', authenticate, async (req, res, next) => {
         const targetUserId = req.params['userId'];
         const userId = req.user.userId;
 
+        const targetUserData = await findUserById(userId, targetUserId);
+        res.status(200).json(targetUserData);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get('/info/profile/:userId', authenticate, async (req, res, next) => {
+    try {
+        const targetUserId = req.params['userId'];
+        const userId = req.user.userId;
+
         const targetUserData = await getUserProfileData(userId, targetUserId);
         res.status(200).json(targetUserData);
     } catch (error) {

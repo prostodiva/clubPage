@@ -117,7 +117,7 @@ export const meetingService = {
     getMeetingById: async (meetingId, token) => {
         try {
             const response = await axios.get(
-                `${API_URL}/meetings/${meetingId}`,
+                `${API_URL}/meetings/clubs/${clubId}/meetings/${meetingId}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
