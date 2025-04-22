@@ -1,17 +1,17 @@
-import Members from '../components/Members';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import Members from '../components/Members';
 
 const MembersPage = () => {
     return (
-        <section id="members">
+        <div className="flex flex-col min-h-screen">
             <Header />
-            <main>
+            <main className="flex-grow">
                 <Members />
             </main>
             <Footer />
-        </section>
-    )
+        </div>
+    );
 };
 
 export default MembersPage;

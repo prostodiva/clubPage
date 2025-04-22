@@ -52,15 +52,10 @@ const Members = () => {
     }, [user]);
 
     const handleDelete = useCallback(async (memberId) => {
-        if (!memberId) {
-            console.error('No member ID provided for deletion');
-            return;
-        }
-
         try {
             const member = members.find(m => m._id === memberId);
-            if (!member) {
-                console.error('Could not find member with ID:', memberId);
+            if (!member?._id) {
+                console.error('Could not find member with _id', memberId);
                 return;
             }
 
@@ -68,7 +63,7 @@ const Members = () => {
             setMembers(prevMembers => prevMembers.filter(m => m._id !== memberId));
             console.log('Member deleted successfully');
         } catch (error) {
-            console.error('Delete member error:', error.message);
+            console.error('delete member error', error);
         }
     }, [members, user?.token]);
 
@@ -95,7 +90,7 @@ const Members = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {members.length > 0 ? (
                         members.map((member) => (
-                            <Card key={member._id} className="overflow-hidden flex flex-col shadow-lg h-[300px]">
+                            <Card key={member.id} className="overflow-hidden flex flex-col shadow-lg h-[300px]">
                                 <div className="relative h-[180px]">
                                     <img
                                         src={member.image || "/placeholder.svg"}
@@ -112,7 +107,7 @@ const Members = () => {
                                     <CardFooter className="flex justify-end space-x-2">
                                         <Button
                                             variant="destructive"
-                                            onClick={() => handleDelete(member._id)}
+                                            onClick={() => handleDelete(member.id)}
                                         >
                                             Delete
                                         </Button>

@@ -5,9 +5,9 @@ import "../styles/events.css"
 
 const EventsPage = () => {
     return (
-        <div className="events">
+        <div className="flex flex-col min-h-screen">
             <Header />
-                <main className="events-section">
+                <main className="flex-grow">
                     <Events />
                 </main>
             <Footer />
