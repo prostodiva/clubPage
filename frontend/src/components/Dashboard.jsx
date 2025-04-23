@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button.jsx";
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Card } from "../components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { useAuth } from '../context/AuthContext';
+import chatService from '../services/chatService';
 import notificationService from '../services/notificationService';
 import '../styles/dashboard.css';
 import UserProfile from './UserProfile';
@@ -13,6 +14,7 @@ import { Textarea } from './ui/textarea';
 const Dashboard = () => {
     const { user } = useAuth();
     const [notifications, setNotifications] = useState([]);
+    const [chats, setChats] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
@@ -23,7 +25,12 @@ const Dashboard = () => {
         entityType: 'Announcement',
         isBroadcast: false
     });
+    const [newChat, setNewChat] = useState({
+        title: '',
+        participants: []
+    });
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [chatDialogOpen, setChatDialogOpen] = useState(false);
     const navigate = useNavigate();
 
     const fetchNotifications = async () => {
@@ -39,9 +46,23 @@ const Dashboard = () => {
         }
     };
 
+    const fetchChats = async () => {
+        try {
+            setLoading(true);
+            const data = await chatService.getAllChats(user.token);
+            setChats(data);
+            setError(null);
+        } catch (err) {
+            setError('Failed to fetch chats');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         if (user?.token) {
             fetchNotifications();
+            fetchChats();
         }
     }, [user?.token]);
 
@@ -79,9 +100,35 @@ const Dashboard = () => {
         }
     };
 
+    const handleCreateChat = async (e) => {
+        e.preventDefault();
+        if (!user?.token) {
+            setError('You must be logged in to create chats');
+            return;
+        }
+
+        try {
+            await chatService.createChat(newChat, user.token);
+            setSuccessMessage('Chat created successfully');
+            setNewChat({ title: '', participants: [] });
+            setChatDialogOpen(false);
+            fetchChats();
+        } catch (err) {
+            setError('Failed to create chat');
+        }
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewNotification(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleChatInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewChat(prev => ({
             ...prev,
             [name]: value
         }));
@@ -110,7 +157,39 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <UserProfile />
                 <Card>
-                    <h1>Dashboard Content</h1>
+                    <CardHeader>
+                        <CardTitle>Chats</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="mb-4">
+                            <Button 
+                                onClick={() => setChatDialogOpen(true)}
+                                variant="default"
+                                size="lg"
+                                className="font-semibold bg-gray-200 hover:bg-gray-300 text-gray-700 transition-colors"
+                            >
+                                + Create Chat
+                            </Button>
+                        </div>
+                        <div className="space-y-4">
+                            {chats.map(chat => (
+                                <div
+                                    key={chat._id}
+                                    className="p-4 rounded bg-white border shadow-sm hover:shadow-md transition-shadow"
+                                >
+                                    <h3 className="font-semibold">{chat.title}</h3>
+                                    <p className="text-sm text-gray-500">
+                                        {chat.participants?.length || 0} participants
+                                    </p>
+                                    {chat.lastMessage && (
+                                        <p className="text-sm mt-2">
+                                            Last message: {chat.lastMessage.content}
+                                        </p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
                 </Card>
             </div>
 
@@ -236,6 +315,61 @@ const Dashboard = () => {
                                 className="bg-gray-200 hover:bg-gray-300 text-gray-700"
                             >
                                 Create Notification
+                            </Button>
+                        </div>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={chatDialogOpen} onOpenChange={setChatDialogOpen}>
+                <DialogContent className="bg-white">
+                    <DialogHeader>
+                        <DialogTitle>Create New Chat</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleCreateChat} className="space-y-4">
+                        <div className="space-y-2">
+                            <label htmlFor="title" className="text-sm font-medium text-gray-700">Chat Title</label>
+                            <Input
+                                id="title"
+                                name="title"
+                                value={newChat.title}
+                                onChange={handleChatInputChange}
+                                placeholder="Enter chat title"
+                                required
+                                className="w-full bg-white border-gray-300"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label htmlFor="participants" className="text-sm font-medium text-gray-700">Participants (comma-separated IDs)</label>
+                            <Input
+                                id="participants"
+                                name="participants"
+                                value={newChat.participants}
+                                onChange={(e) => handleChatInputChange({
+                                    target: {
+                                        name: 'participants',
+                                        value: e.target.value.split(',').map(id => id.trim())
+                                    }
+                                })}
+                                placeholder="Enter participant IDs"
+                                required
+                                className="w-full bg-white border-gray-300"
+                            />
+                        </div>
+                        <div className="flex justify-end space-x-2 pt-4">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setChatDialogOpen(false)}
+                                className="text-gray-700 border-gray-300 hover:bg-gray-50"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="submit"
+                                className="bg-gray-200 hover:bg-gray-300 text-gray-700"
+                            >
+                                Create Chat
                             </Button>
                         </div>
                     </form>

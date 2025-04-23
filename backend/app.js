@@ -6,6 +6,7 @@ const userRoutes = require('./api/route/userRoutes');       //import and attach 
 const clubRoutes = require('./api/route/clubRoutes');
 const meetingRoutes = require('./api/route/meetingRoutes');
 const notificationRoutes = require('./api/route/notificationRoutes');
+const chatRoutes = require('./api/route/chatRoutes');
 
 const app = express();                                      //creates a new Express application
 
@@ -20,5 +21,6 @@ app.use('/users', userRoutes);                              //Mount user routes 
 app.use('/clubs', clubRoutes);
 app.use('/meetings', meetingRoutes);
 app.use('/notify', notificationRoutes);
+app.use('/chats', chatRoutes);
 
 module.exports = app;                                       //export the Express application
