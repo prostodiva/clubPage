@@ -30,6 +30,32 @@ const notificationService = {
         }
     },
 
+    broadcastNotification: async (notificationData, token) => {
+        try {
+            const response = await axios.post(
+                `${API_URL}/notify/broadcast`,
+                {
+                    message: notificationData.message,
+                    entityType: notificationData.entityType
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            return response.data;
+        } catch(error) {
+            console.error('Broadcast notification error:', {
+                message: error.message,
+                response: error.response?.data,
+                status: error.response?.status
+            });
+            throw new Error(error.response?.data?.message || 'Failed to broadcast notification');
+        }
+    },
+
     getNotifications: async (token) => {
         try {
             const response = await axios.get(

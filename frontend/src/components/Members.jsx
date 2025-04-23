@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button.jsx";
-import Axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { Card, CardContent, CardFooter } from '../components/ui/card';
 import { useAuth } from '../context/AuthContext';
@@ -12,63 +11,57 @@ const Members = () => {
     const { user } = useAuth();
     const isAdmin = user?.role === 'Admin';
 
-    useEffect(() => {
-        const fetchMembers = async () => {
-            try {
-                setLoading(true);
+    const fetchMembers = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch('http://localhost:8080/users/all', {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
 
-                console.log('Requesting config', {
-                    url: 'http://localhost:8080/users/all',
-                    headers: {
-                        'Authorization': `Bearer ${user.token}`,
-                        'Content-Type': 'application/json',
-                    }
-                });
-
-                const response = await Axios.get(`http://localhost:8080/users/all`, {
-                    headers: {
-                        'Authorization': `Bearer ${user.token}`,
-                        'Content-Type': 'application/json',
-                    }
-                });
-
-                console.log('response status:', response.status);
-                console.log('response data:', response.data);
-
-                setMembers(response.data);
-                setLoading(false);
-            } catch (error) {
-                console.error("error fetching members: ", error);
-                setError('failed to load members');
-                setLoading(false);
+            if (!response.ok) {
+                throw new Error('Failed to fetch members');
             }
-        };
-        if (!user) {
+
+            const data = await response.json();
+            setMembers(data);
+            setError(null);
+        } catch (error) {
+            console.error("Error fetching members:", error);
+            setError('Failed to load members');
+        } finally {
             setLoading(false);
-            setError('please log in to view members');
-        } else {
-            fetchMembers();
         }
-    }, [user]);
+    };
+
+    useEffect(() => {
+        if (user?.token) {
+            fetchMembers();
+        } else {
+            setError('Please log in to view members');
+            setLoading(false);
+        }
+    }, [user?.token]);
 
     const handleDelete = useCallback(async (memberId) => {
-        try {
-            const member = members.find(m => m._id === memberId);
-            if (!member?._id) {
-                console.error('Could not find member with _id', memberId);
-                return;
-            }
+        if (!user?.token) {
+            setError('You must be logged in to delete members');
+            return;
+        }
 
+        try {
             await memberService.deleteMember(memberId, user.token);
             setMembers(prevMembers => prevMembers.filter(m => m._id !== memberId));
-            console.log('Member deleted successfully');
         } catch (error) {
-            console.error('delete member error', error);
+            console.error('Delete member error:', error);
+            setError('Failed to delete member');
         }
-    }, [members, user?.token]);
+    }, [user?.token]);
 
     return (
-        <section id="members" className="members py-16 px-4">
+        <section id="members" className="members py-16 px-4 bg-white">
             <div className="text-center mb-16">
                 <h3 className="members-title text-4xl font-bold tracking-wider">MEET OUR MEMBERS</h3>
             </div>
@@ -90,24 +83,24 @@ const Members = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {members.length > 0 ? (
                         members.map((member) => (
-                            <Card key={member.id} className="overflow-hidden flex flex-col shadow-lg h-[300px]">
-                                <div className="relative h-[180px]">
+                            <Card key={member._id} className="overflow-hidden flex flex-col shadow-lg h-[300px] bg-white">
+                                <div className="relative h-[180px] bg-gray-100">
                                     <img
-                                        src={member.image || "/placeholder.svg"}
+                                        src={member.profileImageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=F3F4F6&color=374151`}
                                         alt={member.name}
-                                        className="absolute inset-0 w-full h-full object-cover"
+                                        className="absolute inset-0 w-full h-full object-cover bg-gray-100"
                                     />
                                 </div>
-                                <CardContent className="p-4 flex-grow">
-                                    <h3 className="text-xl font-bold">{member.name}</h3>
-                                    {member.role && <p className="text-gray-500">{member.role}</p>}
-                                    {member.year && <p className="text-gray-500">Year: {member.year}</p>}
+                                <CardContent className="p-4 flex-grow bg-white">
+                                    <h3 className="text-xl font-bold text-gray-900">{member.name}</h3>
+                                    {member.role && <p className="text-gray-600">{member.role}</p>}
+                                    {member.email && <p className="text-gray-600">{member.email}</p>}
                                 </CardContent>
                                 {isAdmin && (
-                                    <CardFooter className="flex justify-end space-x-2">
+                                    <CardFooter className="flex justify-end space-x-2 bg-white">
                                         <Button
                                             variant="destructive"
-                                            onClick={() => handleDelete(member.id)}
+                                            onClick={() => handleDelete(member._id)}
                                         >
                                             Delete
                                         </Button>

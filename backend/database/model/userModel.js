@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     },
     profileImageUrl: {
         type: String,
-        default: 'https://ui-avatars.com/api/?name=John+Doe&background=random',
+        default: 'https://ui-avatars.com/api/?name=User&background=F3F4F6&color=374151',
     },
     associations: [                             //array of associations
         {

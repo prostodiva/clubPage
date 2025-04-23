@@ -20,7 +20,8 @@ const Dashboard = () => {
         recipient: '',
         sender: user?.userId || '',
         message: '',
-        entityType: 'Announcement'
+        entityType: 'Announcement',
+        isBroadcast: false
     });
     const [dialogOpen, setDialogOpen] = useState(false);
     const navigate = useNavigate();
@@ -52,16 +53,24 @@ const Dashboard = () => {
         }
 
         try {
-            await notificationService.createNotification({
-                ...newNotification,
-                sender: user.userId
-            }, user.token);
+            if (newNotification.isBroadcast) {
+                await notificationService.broadcastNotification({
+                    message: newNotification.message,
+                    entityType: newNotification.entityType
+                }, user.token);
+            } else {
+                await notificationService.createNotification({
+                    ...newNotification,
+                    sender: user.userId
+                }, user.token);
+            }
             setSuccessMessage('Notification created successfully');
             setNewNotification({ 
                 recipient: '',
                 sender: user.userId,
                 message: '',
-                entityType: 'Announcement'
+                entityType: 'Announcement',
+                isBroadcast: false
             });
             setDialogOpen(false);
             fetchNotifications();
@@ -153,18 +162,20 @@ const Dashboard = () => {
                         <DialogTitle>Create New Notification</DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleCreateNotification} className="space-y-4">
-                        <div className="space-y-2">
-                            <label htmlFor="recipient" className="text-sm font-medium text-gray-700">Recipient</label>
-                            <Input
-                                id="recipient"
-                                name="recipient"
-                                value={newNotification.recipient}
-                                onChange={handleInputChange}
-                                placeholder="Enter recipient ID"
-                                required
-                                className="w-full bg-white border-gray-300"
-                            />
-                        </div>
+                        {!newNotification.isBroadcast && (
+                            <div className="space-y-2">
+                                <label htmlFor="recipient" className="text-sm font-medium text-gray-700">Recipient</label>
+                                <Input
+                                    id="recipient"
+                                    name="recipient"
+                                    value={newNotification.recipient}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter recipient ID"
+                                    required={!newNotification.isBroadcast}
+                                    className="w-full bg-white border-gray-300"
+                                />
+                            </div>
+                        )}
                         <div className="space-y-2">
                             <label htmlFor="message" className="text-sm font-medium text-gray-700">Message</label>
                             <Textarea
@@ -191,6 +202,26 @@ const Dashboard = () => {
                                 <option value="ContactRequest">Contact Request</option>
                             </select>
                         </div>
+                        {user.role === 'Admin' && (
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="checkbox"
+                                    id="isBroadcast"
+                                    name="isBroadcast"
+                                    checked={newNotification.isBroadcast}
+                                    onChange={(e) => handleInputChange({
+                                        target: {
+                                            name: 'isBroadcast',
+                                            value: e.target.checked
+                                        }
+                                    })}
+                                    className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                                />
+                                <label htmlFor="isBroadcast" className="text-sm font-medium text-gray-700">
+                                    Send to all users
+                                </label>
+                            </div>
+                        )}
                         <div className="flex justify-end space-x-2 pt-4">
                             <Button
                                 type="button"
