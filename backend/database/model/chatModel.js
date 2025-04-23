@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const messageSchema = new mongoose.Schema({
     sender: {
@@ -20,6 +21,8 @@ const messageSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }]
+}, {
+    timestamps: true
 });
 
 const chatSchema = new mongoose.Schema({
@@ -39,15 +42,7 @@ const chatSchema = new mongoose.Schema({
         ref: 'User'
     }],
     messages: [messageSchema],
-    lastMessage: {
-        type: Date,
-        default: Date.now
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
+    lastMessageAt: {
         type: Date,
         default: Date.now
     }
@@ -65,7 +60,7 @@ chatSchema.pre('save', function(next) {
 
 // Create indexes for better query performance
 chatSchema.index({ participants: 1 });
-chatSchema.index({ lastMessage: -1 });
+chatSchema.index({ lastMessageAt: -1 });
 
 const Chat = mongoose.model('Chat', chatSchema);
 

@@ -39,6 +39,17 @@ router.post('/', authenticate, async (req, res) => {
     }
 });
 
+// Get messages from a chat
+router.get('/:chatId/messages', authenticate, async (req, res) => {
+    try {
+        const messages = await chatService.getMessages(req.params.chatId, req.user.userId);
+        res.json(messages);
+    } catch (error) {
+        console.error('Error fetching messages:', error);
+        res.status(400).json({ error: error.message });
+    }
+});
+
 // Send a message in a chat
 router.post('/:chatId/messages', authenticate, async (req, res) => {
     try {

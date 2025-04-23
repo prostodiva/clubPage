@@ -24,7 +24,7 @@ const UserProfile = () => {
 
             try {
                 console.log('Fetching profile for user:', user.userId); // Debug log
-                const response = await axios.get(`${API_URL}/users/info/${user.userId}`, {
+                const response = await axios.get(`${API_URL}/users/info/profile/${user.userId}`, {
                     headers: {
                         'Authorization': `Bearer ${user.token}`
                     }

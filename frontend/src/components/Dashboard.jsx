@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import chatService from '../services/chatService';
 import notificationService from '../services/notificationService';
 import '../styles/dashboard.css';
+import Chat from './Chat';
 import UserProfile from './UserProfile';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { Input } from './ui/input';
@@ -18,6 +19,7 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
+    const [selectedChatId, setSelectedChatId] = useState(null);
     const [newNotification, setNewNotification] = useState({
         recipient: '',
         sender: user?.userId || '',
@@ -134,28 +136,33 @@ const Dashboard = () => {
         }));
     };
 
+    const handleChatClick = (chatId) => {
+        setSelectedChatId(chatId);
+    };
+
     if (!user?.token) {
         return <div>Please log in to view the dashboard</div>;
     }
 
     return (
-        <div className="flex-grow container mx-auto px-4 py-8">
+        <div className="container mx-auto p-4 space-y-4">
             <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
             
             {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
                     {error}
                 </div>
             )}
             
             {successMessage && (
-                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
                     {successMessage}
                 </div>
             )}
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <UserProfile />
+                
                 <Card>
                     <CardHeader>
                         <CardTitle>Chats</CardTitle>
@@ -175,7 +182,8 @@ const Dashboard = () => {
                             {chats.map(chat => (
                                 <div
                                     key={chat._id}
-                                    className="p-4 rounded bg-white border shadow-sm hover:shadow-md transition-shadow"
+                                    onClick={() => handleChatClick(chat._id)}
+                                    className="p-4 rounded bg-white border shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                                 >
                                     <h3 className="font-semibold">{chat.title}</h3>
                                     <p className="text-sm text-gray-500">
@@ -191,6 +199,12 @@ const Dashboard = () => {
                         </div>
                     </CardContent>
                 </Card>
+
+                {selectedChatId && (
+                    <Card className="col-span-2">
+                        <Chat selectedChatId={selectedChatId} />
+                    </Card>
+                )}
             </div>
 
             <div className="bg-white rounded-lg shadow-md p-6 mt-4">

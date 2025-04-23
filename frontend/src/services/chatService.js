@@ -41,23 +41,36 @@ const chatService = {
                 `${API_URL}/chats/${chatId}/messages`,
                 messageData,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
                 }
             );
             return response.data;
         } catch (error) {
-            throw new Error(error.response?.data?.message || 'Failed to send message');
+            console.error('Error sending message:', error);
+            throw new Error('Failed to send message');
         }
     },
 
     getMessages: async (chatId, token) => {
         try {
             const response = await axios.get(`${API_URL}/chats/${chatId}/messages`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
             });
-            return response.data;
+            if (response.data && Array.isArray(response.data)) {
+                return response.data;
+            } else {
+                console.error('Invalid response format:', response.data);
+                throw new Error('Invalid response format');
+            }
         } catch (error) {
-            throw new Error(error.response?.data?.message || 'Failed to fetch messages');
+            console.error('Error fetching messages:', error);
+            throw new Error(error.response?.data?.error || 'Failed to fetch messages');
         }
     },
 

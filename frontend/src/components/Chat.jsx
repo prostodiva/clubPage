@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import chatService from '../services/chatService';
@@ -11,6 +10,14 @@ const Chat = ({ selectedChatId }) => {
     const [error, setError] = useState(null);
     const [chatInfo, setChatInfo] = useState(null);
     const messagesEndRef = useRef(null);
+
+    const formatTime = (date) => {
+        return new Date(date).toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
+    };
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -30,9 +37,10 @@ const Chat = ({ selectedChatId }) => {
     const fetchChatInfo = async () => {
         try {
             const response = await chatService.getChatById(selectedChatId, user.token);
-            setChatInfo(response.data);
+            setChatInfo(response);
         } catch (err) {
             setError('Failed to load chat information');
+            console.error('Error loading chat info:', err);
         }
     };
 
@@ -42,10 +50,16 @@ const Chat = ({ selectedChatId }) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await chatService.getMessages(selectedChatId, user.token);
-            setMessages(response.data);
+            const messages = await chatService.getMessages(selectedChatId, user.token);
+            if (Array.isArray(messages)) {
+                setMessages(messages);
+            } else {
+                console.error('Invalid messages format:', messages);
+                setError('Invalid message format received');
+            }
         } catch (err) {
             setError('Failed to load messages');
+            console.error('Error loading messages:', err);
         } finally {
             setLoading(false);
         }
@@ -57,8 +71,7 @@ const Chat = ({ selectedChatId }) => {
 
         try {
             const messageData = {
-                content: newMessage.trim(),
-                senderId: user.id
+                content: newMessage.trim()
             };
             
             const response = await chatService.sendMessage(
@@ -67,10 +80,12 @@ const Chat = ({ selectedChatId }) => {
                 user.token
             );
             
-            setMessages([...messages, response.data]);
+            setMessages(prevMessages => [...prevMessages, response]);
             setNewMessage('');
+            setError(null);
         } catch (err) {
             setError('Failed to send message');
+            console.error('Error sending message:', err);
         }
     };
 
@@ -114,22 +129,22 @@ const Chat = ({ selectedChatId }) => {
                     <div
                         key={message._id}
                         className={`flex ${
-                            message.senderId === user.id ? 'justify-end' : 'justify-start'
+                            message.senderId === user.userId ? 'justify-end' : 'justify-start'
                         }`}
                     >
                         <div
                             className={`max-w-[70%] rounded-lg p-3 ${
-                                message.senderId === user.id
+                                message.senderId === user.userId
                                     ? 'bg-blue-500 text-white'
                                     : 'bg-gray-100'
                             }`}
                         >
                             <div className="flex items-baseline mb-1">
                                 <span className="font-medium text-sm">
-                                    {message.senderId === user.id ? 'You' : message.senderName}
+                                    {message.senderId === user.userId ? 'You' : message.senderName}
                                 </span>
                                 <span className="ml-2 text-xs opacity-75">
-                                    {format(new Date(message.createdAt), 'HH:mm')}
+                                    {formatTime(message.createdAt)}
                                 </span>
                             </div>
                             <p className="break-words">{message.content}</p>
