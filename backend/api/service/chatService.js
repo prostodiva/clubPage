@@ -3,6 +3,7 @@ const User = require('../../database/model/userModel');
 const mongoose = require('mongoose');
 const { ensureOwnership } = require('../../api/service/authService');
 const { UnauthorizedError, BadRequestError, NotFoundError } = require('../../api/errors/errors');
+const Meeting = require("../../database/model/meetingModel");
 
 class ChatService {
     async getAllChats(userId) {
@@ -210,21 +211,28 @@ class ChatService {
     }
 
     async deleteChat(chatId, userId) {
-        try {
-            const chat = await Chat.findOne({
-                _id: chatId,
-                creator: userId // Only creator can delete chat
-            });
+        const chat = await Chat.findOne({
+            _id: chatId,
+            creator: userId
+        });
 
-            if (!chat) {
-                throw new Error('Chat not found or not authorized to delete');
-            }
-
-            await chat.remove();
-            return { message: 'Chat deleted successfully' };
-        } catch (error) {
-            throw new Error('Error deleting chat: ' + error.message);
+        if (!chat) {
+            throw new Error('Chat not found or not authorized to delete');
         }
+
+        const deletedChat = await Chat.findByIdAndUpdate(
+            chatId,
+            {
+                $set: {
+                    isActive: false,
+                    lastUpdatedAt: new Date(),
+                    lastUpdatedBy: userId
+                }
+            },
+            {new: true}
+        );
+
+        return deletedChat;
     }
 }
 
