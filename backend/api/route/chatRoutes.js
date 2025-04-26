@@ -100,4 +100,14 @@ router.delete('/:chatId', authenticate, async (req, res) => {
     }
 });
 
+// Leave a chat
+router.post('/:chatId/leave', authenticate, async (req, res) => {
+    try {
+        const result = await chatService.leaveChat(req.params.chatId, req.user.userId);
+        res.json(result);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
 module.exports = router;

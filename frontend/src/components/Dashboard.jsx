@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { useAuth } from '../context/AuthContext';
 import chatService from '../services/chatService';
 import notificationService from '../services/notificationService';
+import userService from '../services/userService';
 import '../styles/dashboard.css';
 import Chat from './Chat';
 import UserProfile from './UserProfile';
@@ -20,6 +21,7 @@ const Dashboard = () => {
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [selectedChatId, setSelectedChatId] = useState(null);
+    const [allUsers, setAllUsers] = useState([]);
     const [newNotification, setNewNotification] = useState({
         recipient: '',
         sender: user?.userId || '',
@@ -61,10 +63,22 @@ const Dashboard = () => {
         }
     };
 
+    const fetchAllUsers = async () => {
+        if (!user?.token) return;
+        
+        try {
+            const users = await userService.getAllUsers(user.token);
+            setAllUsers(users);
+        } catch (err) {
+            setError('Failed to fetch users');
+        }
+    };
+
     useEffect(() => {
         if (user?.token) {
             fetchNotifications();
             fetchChats();
+            fetchAllUsers();
         }
     }, [user?.token]);
 
@@ -128,6 +142,27 @@ const Dashboard = () => {
         }));
     };
 
+    const handleDeleteChat = async (chatId) => {
+        if (!user?.token) {
+            setError('You must be logged in to delete chats');
+            return;
+        }
+
+        if (!chatId) {
+            setError('Please select a chat to delete');
+            return;
+        }
+
+        try {
+            await chatService.deleteChat(chatId, user.token);
+            setSuccessMessage('Chat deleted successfully');
+            setSelectedChatId(null); // Clear the selected chat after deletion
+            fetchChats(); // Refresh the chat list after deletion
+        } catch (err) {
+            setError('Failed to delete chat');
+        }
+    };
+
     const handleChatInputChange = (e) => {
         const { name, value } = e.target;
         setNewChat(prev => ({
@@ -138,6 +173,29 @@ const Dashboard = () => {
 
     const handleChatClick = (chatId) => {
         setSelectedChatId(chatId);
+    };
+
+    const handleAddAllUsers = () => {
+        const allUserIds = allUsers.map(user => user._id);
+        setNewChat(prev => ({
+            ...prev,
+            participants: allUserIds
+        }));
+    };
+
+    const handleLeaveChat = async (chatId) => {
+        if (!user?.token) {
+            setError('You must be logged in to leave chats');
+            return;
+        }
+
+        try {
+            await chatService.leaveChat(chatId, user.token);
+            setSuccessMessage('Successfully left the chat');
+            fetchChats();
+        } catch (err) {
+            setError('Failed to leave chat');
+        }
     };
 
     if (!user?.token) {
@@ -178,22 +236,56 @@ const Dashboard = () => {
                                 + Create Chat
                             </Button>
                         </div>
+
                         <div className="space-y-4">
                             {chats.map(chat => (
                                 <div
                                     key={chat._id}
-                                    onClick={() => handleChatClick(chat._id)}
-                                    className="p-4 rounded bg-white border shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                                    className={`p-4 rounded bg-white border shadow-sm hover:shadow-md transition-shadow cursor-pointer ${
+                                        selectedChatId === chat._id ? 'border-blue-500 bg-blue-50' : ''
+                                    }`}
                                 >
-                                    <h3 className="font-semibold">{chat.title}</h3>
-                                    <p className="text-sm text-gray-500">
-                                        {chat.participants?.length || 0} participants
-                                    </p>
-                                    {chat.lastMessage && (
-                                        <p className="text-sm mt-2">
-                                            Last message: {chat.lastMessage.content}
-                                        </p>
-                                    )}
+                                    <div className="flex justify-between items-start">
+                                        <div 
+                                            className="flex-grow"
+                                            onClick={() => handleChatClick(chat._id)}
+                                        >
+                                            <h3 className="font-semibold">{chat.title}</h3>
+                                            <p className="text-sm text-gray-500">
+                                                {chat.participants?.length || 0} participants
+                                            </p>
+                                            {chat.lastMessage && (
+                                                <p className="text-sm mt-2">
+                                                    Last message: {chat.lastMessage.content}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div className="flex space-x-2">
+                                            {user.role === 'Admin' ? (
+                                                <Button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDeleteChat(chat._id);
+                                                    }}
+                                                    variant="destructive"
+                                                    size="sm"
+                                                >
+                                                    Delete
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleLeaveChat(chat._id);
+                                                    }}
+                                                    variant="outline"
+                                                    size="sm"
+                                                >
+                                                    Leave
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -355,20 +447,30 @@ const Dashboard = () => {
                         </div>
                         <div className="space-y-2">
                             <label htmlFor="participants" className="text-sm font-medium text-gray-700">Participants (comma-separated IDs)</label>
-                            <Input
-                                id="participants"
-                                name="participants"
-                                value={newChat.participants}
-                                onChange={(e) => handleChatInputChange({
-                                    target: {
-                                        name: 'participants',
-                                        value: e.target.value.split(',').map(id => id.trim())
-                                    }
-                                })}
-                                placeholder="Enter participant IDs"
-                                required
-                                className="w-full bg-white border-gray-300"
-                            />
+                            <div className="flex space-x-2">
+                                <Input
+                                    id="participants"
+                                    name="participants"
+                                    value={newChat.participants.join(',')}
+                                    onChange={(e) => handleChatInputChange({
+                                        target: {
+                                            name: 'participants',
+                                            value: e.target.value.split(',').map(id => id.trim())
+                                        }
+                                    })}
+                                    placeholder="Enter participant IDs"
+                                    required
+                                    className="w-full bg-white border-gray-300"
+                                />
+                                <Button
+                                    type="button"
+                                    onClick={handleAddAllUsers}
+                                    variant="outline"
+                                    className="whitespace-nowrap"
+                                >
+                                    Add All Users
+                                </Button>
+                            </div>
                         </div>
                         <div className="flex justify-end space-x-2 pt-4">
                             <Button

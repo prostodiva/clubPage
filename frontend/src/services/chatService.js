@@ -100,6 +100,21 @@ const chatService = {
         }
     },
 
+    leaveChat: async (chatId, token) => {
+        try {
+            const response = await axios.post(
+                `${API_URL}/chats/${chatId}/leave`,
+                {},
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+            return response.data;
+        } catch (error) {
+            throw new Error(error.response?.data?.message || 'Failed to leave chat');
+        }
+    },
+
     // Add participants to a chat
     addParticipants: async (chatId, participantIds, token) => {
         try {

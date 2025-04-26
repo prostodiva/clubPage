@@ -211,28 +211,66 @@ class ChatService {
     }
 
     async deleteChat(chatId, userId) {
+        // First check if the user is an admin
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Find the chat and check if user is either creator or admin
         const chat = await Chat.findOne({
             _id: chatId,
-            creator: userId
+            $or: [
+                { creator: userId },
+                { participants: userId }
+            ]
         });
 
         if (!chat) {
             throw new Error('Chat not found or not authorized to delete');
         }
 
-        const deletedChat = await Chat.findByIdAndUpdate(
-            chatId,
-            {
-                $set: {
-                    isActive: false,
-                    lastUpdatedAt: new Date(),
-                    lastUpdatedBy: userId
-                }
-            },
-            {new: true}
-        );
+        // Only allow deletion if user is creator or admin
+        if (chat.creator.toString() !== userId.toString() && user.role !== 'Admin') {
+            throw new Error('Not authorized to delete this chat');
+        }
 
-        return deletedChat;
+        // Actually delete the chat instead of just marking it as inactive
+        const deletedChat = await Chat.findByIdAndDelete(chatId);
+        
+        if (!deletedChat) {
+            throw new Error('Failed to delete chat');
+        }
+
+        return { message: 'Chat deleted successfully' };
+    }
+
+    async leaveChat(chatId, userId) {
+        const chat = await Chat.findOne({
+            _id: chatId,
+            participants: userId
+        });
+
+        if (!chat) {
+            throw new Error('Chat not found or user is not a participant');
+        }
+
+        // Remove user from participants array
+        chat.participants = chat.participants.filter(id => id.toString() !== userId.toString());
+        
+        // If no participants left, delete the chat
+        if (chat.participants.length === 0) {
+            await Chat.findByIdAndDelete(chatId);
+            return { message: 'Chat deleted as no participants remain' };
+        }
+
+        // If the user was the creator, assign a new creator
+        if (chat.creator.toString() === userId.toString()) {
+            chat.creator = chat.participants[0];
+        }
+
+        await chat.save();
+        return { message: 'Successfully left the chat' };
     }
 }
 
