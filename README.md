@@ -1,4 +1,4 @@
-# ClubPage - Modern Club Management Platform
+# ClubPage - Modern Club Management Platform - https://clubpage.pages.dev/home
 
 ## Overview
 ClubPage is a full-stack web application designed to facilitate club management, member communication, and event organization. The platform features a real-time chat system, event management, and user authentication.
