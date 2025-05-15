@@ -1,3 +1,4 @@
+import { API_URL } from '@/config';
 import { useAuth } from '@/context/AuthContext';
 import { authService, checkApiHealth } from '@/services/auth';
 import { useEffect, useState } from 'react';
@@ -10,13 +11,28 @@ const LoginPage = () => {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [apiStatus, setApiStatus] = useState('checking');
+    const [apiDetails, setApiDetails] = useState(null);
     const navigate = useNavigate();
     const { login } = useAuth();
 
     useEffect(() => {
         const checkApi = async () => {
-            const isHealthy = await checkApiHealth();
-            setApiStatus(isHealthy ? 'healthy' : 'unhealthy');
+            console.log('Current API_URL:', API_URL);
+            try {
+                const isHealthy = await checkApiHealth();
+                setApiStatus(isHealthy ? 'healthy' : 'unhealthy');
+                setApiDetails({
+                    url: API_URL,
+                    status: isHealthy ? 'OK' : 'Failed'
+                });
+            } catch (err) {
+                console.error('API check error:', err);
+                setApiStatus('unhealthy');
+                setApiDetails({
+                    url: API_URL,
+                    error: err.message
+                });
+            }
         };
         checkApi();
     }, []);
@@ -27,24 +43,22 @@ const LoginPage = () => {
             setError('');
 
             if (apiStatus !== 'healthy') {
-                throw new Error('API is currently unavailable. Please try again later.');
+                throw new Error(`API is currently unavailable. Please try again later. (${apiDetails?.error || 'Unknown error'})`);
             }
 
             console.log('Attempting login for:', data.email);
+            console.log('Using API URL:', API_URL);
 
             const response = await authService.login(data);
 
             console.log('Login successful, got token:', !!response.token);
 
-            // Make sure we have a token before calling login
             if (!response.token) {
                 throw new Error('No authentication token received');
             }
 
-            // Call the auth context login with the response
             login({
                 token: response.token,
-                // Add any other user data you need
             });
 
             navigate('/dashboard');
@@ -67,7 +81,14 @@ const LoginPage = () => {
                         )}
                         {apiStatus === 'unhealthy' && (
                             <div className="text-center text-red-600 mb-4">
-                                API is currently unavailable. Please try again later.
+                                <p>API is currently unavailable. Please try again later.</p>
+                                {apiDetails && (
+                                    <p className="text-sm mt-2">
+                                        Details: {apiDetails.error || 'Unknown error'}
+                                        <br />
+                                        URL: {apiDetails.url}
+                                    </p>
+                                )}
                             </div>
                         )}
                         <LoginForm
