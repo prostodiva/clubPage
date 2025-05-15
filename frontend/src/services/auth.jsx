@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { axiosConfig } from '../config';
+import { API_URL, axiosConfig } from '../config';
 
 // Create axios instance with configuration
 const api = axios.create(axiosConfig);
@@ -10,7 +10,8 @@ api.interceptors.request.use(request => {
         url: request.url,
         method: request.method,
         baseURL: request.baseURL,
-        headers: request.headers
+        headers: request.headers,
+        environment: import.meta.env.DEV ? 'Development' : 'Production'
     });
     return request;
 });
@@ -18,7 +19,11 @@ api.interceptors.request.use(request => {
 // Add response interceptor for error handling
 api.interceptors.response.use(
     response => {
-        console.log('Response:', response.data);
+        console.log('Response:', {
+            status: response.status,
+            data: response.data,
+            headers: response.headers
+        });
         return response;
     },
     error => {
@@ -28,7 +33,8 @@ api.interceptors.response.use(
             url: error.config?.url,
             baseURL: error.config?.baseURL,
             status: error.response?.status,
-            data: error.response?.data
+            data: error.response?.data,
+            environment: import.meta.env.DEV ? 'Development' : 'Production'
         });
         return Promise.reject(error);
     }
@@ -37,6 +43,10 @@ api.interceptors.response.use(
 // Health check function
 export const checkApiHealth = async () => {
     try {
+        console.log('Checking API health...');
+        console.log('Environment:', import.meta.env.DEV ? 'Development' : 'Production');
+        console.log('API URL:', API_URL);
+        
         const response = await api.get('/health');
         console.log('API health check response:', response.data);
         return response.data;
@@ -45,7 +55,8 @@ export const checkApiHealth = async () => {
             message: error.message,
             code: error.code,
             baseURL: error.config?.baseURL,
-            url: error.config?.url
+            url: error.config?.url,
+            environment: import.meta.env.DEV ? 'Development' : 'Production'
         });
         throw error;
     }
@@ -54,6 +65,10 @@ export const checkApiHealth = async () => {
 // Login function
 export const login = async (email, password) => {
     try {
+        console.log('Attempting login...');
+        console.log('Environment:', import.meta.env.DEV ? 'Development' : 'Production');
+        console.log('API URL:', API_URL);
+        
         const response = await api.post('/auth/login', { email, password });
         if (response.data.token) {
             localStorage.setItem('token', response.data.token);
@@ -65,7 +80,8 @@ export const login = async (email, password) => {
             message: error.message,
             code: error.code,
             status: error.response?.status,
-            data: error.response?.data
+            data: error.response?.data,
+            environment: import.meta.env.DEV ? 'Development' : 'Production'
         });
         throw error;
     }

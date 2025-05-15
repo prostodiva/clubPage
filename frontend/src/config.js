@@ -12,15 +12,21 @@ const getApiUrl = () => {
     return '/api';  // Use the proxy in development
 };
 
+// Export the API URL
 export const API_URL = getApiUrl();
 
+// Log the final URL being used
 console.log('Final API_URL:', API_URL);
 
+// Export axios configuration
 export const axiosConfig = {
     baseURL: API_URL,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
     },
-    timeout: 30000 // Increase timeout to 30 seconds
+    timeout: 30000, // Increase timeout to 30 seconds
+    validateStatus: function (status) {
+        return status >= 200 && status < 500; // Accept all responses for better error handling
+    }
 }; 
