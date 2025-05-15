@@ -33,7 +33,21 @@ export const authService = {
 
     login: async (credentials) => {
         try {
-            const response = await axios.post(`${API_URL}/users/login`, credentials);
+            console.log('Attempting login with credentials:', { email: credentials.email });
+            console.log('API URL:', `${API_URL}/users/login`);
+            
+            const response = await axios.post(`${API_URL}/users/login`, credentials, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+
+            console.log('Login response:', {
+                status: response.status,
+                hasToken: !!response.data.token,
+                data: response.data
+            });
 
             if (!response.data.token) {
                 throw new Error('No token received from server');
@@ -47,12 +61,19 @@ export const authService = {
             console.error('Login error details:', {
                 status: error.response?.status,
                 data: error.response?.data,
-                message: error.response?.data?.message || error.message
+                message: error.response?.data?.message || error.message,
+                headers: error.response?.headers,
+                config: {
+                    url: error.config?.url,
+                    method: error.config?.method,
+                    headers: error.config?.headers
+                }
             });
 
             throw {
                 message: error.response?.data?.message || 'Login failed',
-                status: error.response?.status || 500
+                status: error.response?.status || 500,
+                details: error.response?.data
             };
         }
     }
