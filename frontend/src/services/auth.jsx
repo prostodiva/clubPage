@@ -12,68 +12,53 @@ const getBaseUrl = () => {
     return API_URL;     // Use the direct URL in production
 };
 
+// Create axios instance with default config
+const api = axios.create({
+    baseURL: getBaseUrl(),
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    },
+    timeout: 10000
+});
+
 // Global axios interceptor for error handling
-axios.interceptors.response.use(
+api.interceptors.response.use(
     (response) => response,
     (error) => {
-        // Network error or CORS error
-        if (!error.response) {
-            console.error('Network Error:', {
-                message: error.message,
-                code: error.code,
-                stack: error.stack,
-                url: error.config?.url,
-                baseURL: error.config?.baseURL
-            });
-            throw {
-                message: 'Network error - Unable to reach the server',
-                details: error.message,
-                code: error.code
-            };
-        }
-        
-        // Server response error
         console.error('API Error:', {
-            message: error.response?.data?.message || error.message,
+            message: error.message,
+            code: error.code,
+            url: error.config?.url,
+            baseURL: error.config?.baseURL,
             status: error.response?.status,
             data: error.response?.data
         });
-        throw error.response?.data || { message: 'An error occurred' };
+        throw error;
     }
 );
 
 // Add health check function
 export const checkApiHealth = async () => {
     try {
-        const baseUrl = getBaseUrl();
-        const url = `${baseUrl}`;
-        console.log('Checking API health at:', url);
+        console.log('Checking API health...');
         console.log('Environment:', isDevelopment ? 'Development' : 'Production');
-        console.log('Base URL:', baseUrl);
+        console.log('Base URL:', getBaseUrl());
         
-        const response = await axios.get(url, {
-            timeout: 5000,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        });
+        const response = await api.get('/');
         
         console.log('API health check response:', {
             status: response.status,
             statusText: response.statusText,
-            headers: response.headers,
             data: response.data
         });
         
         return true;
     } catch (error) {
         console.error('API health check failed:', {
-            name: error.name,
             message: error.message,
             code: error.code,
-            url: getBaseUrl(),
-            stack: error.stack
+            baseURL: getBaseUrl()
         });
         return false;
     }
@@ -100,23 +85,15 @@ export const authService = {
 
     login: async (credentials) => {
         try {
-            const baseUrl = getBaseUrl();
-            console.log('Attempting login with credentials:', { email: credentials.email });
-            console.log('API URL:', `${baseUrl}/users/login`);
+            console.log('Attempting login...');
             console.log('Environment:', isDevelopment ? 'Development' : 'Production');
+            console.log('Base URL:', getBaseUrl());
             
-            const response = await axios.post(`${baseUrl}/users/login`, credentials, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
+            const response = await api.post('/users/login', credentials);
 
             console.log('Login response:', {
                 status: response.status,
-                hasToken: !!response.data.token,
-                data: response.data,
-                headers: response.headers
+                hasToken: !!response.data.token
             });
 
             if (!response.data.token) {
@@ -124,19 +101,18 @@ export const authService = {
             }
 
             return {
-                token: response.data.token,
+                token: response.data.token
             };
         } catch (error) {
-            console.error('Login error details:', {
-                name: error.name,
+            console.error('Login error:', {
                 message: error.message,
                 code: error.code,
-                stack: error.stack,
-                url: getBaseUrl()
+                status: error.response?.status,
+                data: error.response?.data
             });
 
             throw {
-                message: error.message || 'Login failed',
+                message: error.response?.data?.message || error.message || 'Login failed',
                 status: error.response?.status || 500,
                 details: error.response?.data
             };
