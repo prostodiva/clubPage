@@ -33,20 +33,32 @@ axios.interceptors.response.use(
 // Add health check function
 export const checkApiHealth = async () => {
     try {
-        console.log('Checking API health at:', API_URL);
-        const response = await axios.get(API_URL, {
+        const url = `${API_URL}`;
+        console.log('Checking API health at:', url);
+        console.log('Current API_URL value:', API_URL);
+        
+        const response = await axios.get(url, {
             timeout: 5000,
             headers: {
                 'Accept': 'application/json'
             }
         });
-        console.log('API health check response:', response.status);
+        
+        console.log('API health check response:', {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers,
+            data: response.data
+        });
+        
         return response.status === 200;
     } catch (error) {
         console.error('API health check failed:', {
             message: error.message,
             code: error.code,
-            url: API_URL
+            url: API_URL,
+            config: error.config,
+            response: error.response
         });
         return false;
     }
