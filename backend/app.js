@@ -12,8 +12,8 @@ const messageRoutes = require('./api/route/messageRoutes');
 const app = express();                                      //creates a new Express application
 
 // Health check endpoint
-app.get('/', (req, res) => {
-  res.status(200).send('OK');
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
 });
 
 securityMiddleware(app);
@@ -22,8 +22,7 @@ securityMiddleware(app);
 const corsOptions = {
     origin: [
         'https://clubpage.pages.dev',
-        'http://localhost:5173',
-        'http://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com'
+        'http://localhost:5173'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

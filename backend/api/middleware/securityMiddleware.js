@@ -23,7 +23,7 @@ const securityMiddleware = (app) => {
     app.use((req, res, next) => {
         const allowedOrigins = [
             'http://localhost:5173',  // Development
-            'http://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com'  // Production
+            'https://clubpage.pages.dev'  // Production
         ];
         
         const origin = req.headers.origin;

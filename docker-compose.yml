@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   frontend:
     build:
@@ -9,15 +11,16 @@ services:
       - ./frontend:/app
       - frontend_node_modules:/app/node_modules
     environment:
-      - VITE_HOST=0.0.0.0
       - NODE_ENV=development
-      - VITE_API_URL=https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com
+      - VITE_API_URL=https://clubpage.pages.dev/api
     command: npm run dev
     networks:
       - app-network
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     volumes:
@@ -25,17 +28,15 @@ services:
       - backend_node_modules:/app/node_modules
       - ./backend/uploads:/app/uploads
     environment:
-      - MONGO_URI=mongodb+srv://kattsyna:yu7SdJsrY6kahmIK@cluster0.e5qd8g7.mongodb.net/clubpage?retryWrites=true&w=majority&appName=Cluster0
-      - PORT=8080
       - NODE_ENV=development
-      - CORS_ORIGIN=https://clubpage.pages.dev
-      - JWT_SECRET=your_secret_key_here
-      - BASE_URL=https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com
+      - BASE_URL=https://clubpage.pages.dev
     networks:
       - app-network
     dns:
       - 8.8.8.8
       - 1.1.1.1
+    command: npm run dev
+
 networks:
   app-network:
     driver: bridge
