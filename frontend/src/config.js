@@ -3,7 +3,9 @@ const getApiUrl = () => {
     if (import.meta.env.DEV) {
         return '/api';  // Use the proxy in development
     }
-    return import.meta.env.VITE_API_URL || 'https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com';
+    // Force HTTPS in production
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com';
+    return apiUrl.replace('http://', 'https://');
 };
 
 export const API_URL = getApiUrl();
