@@ -1,10 +1,9 @@
+import { API_URL } from '@/config';
 import { useAuth } from '@/context/AuthContext';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ImageUpload from './ImageUpload';
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 const UserProfile = () => {
     const { user } = useAuth();

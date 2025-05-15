@@ -1,8 +1,7 @@
+import { API_URL } from '@/config';
 import axios from 'axios';
 import { useState } from 'react';
 import { Button } from "./ui/button";
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 const ImageUpload = ({ onImageUploaded, currentImageUrl }) => {
     const [isUploading, setIsUploading] = useState(false);
