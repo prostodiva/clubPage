@@ -1,33 +1,27 @@
 import axios from 'axios';
-import { API_URL } from '../config';
+import { axiosConfig } from '../config';
 
-// Determine if we're in development mode
-const isDevelopment = import.meta.env.DEV;
+// Create axios instance with configuration
+const api = axios.create(axiosConfig);
 
-// Get the base URL based on environment
-const getBaseUrl = () => {
-    if (isDevelopment) {
-        console.log('Using development base URL');
-        return '/api';  // Use the proxy in development
-    }
-    console.log('Using production base URL:', API_URL);
-    return API_URL;     // Use the direct URL in production
-};
-
-// Create axios instance with default config
-const api = axios.create({
-    baseURL: getBaseUrl(),
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    },
-    timeout: 10000
+// Add request interceptor for logging
+api.interceptors.request.use(request => {
+    console.log('Starting Request:', {
+        url: request.url,
+        method: request.method,
+        baseURL: request.baseURL,
+        headers: request.headers
+    });
+    return request;
 });
 
-// Global axios interceptor for error handling
+// Add response interceptor for error handling
 api.interceptors.response.use(
-    (response) => response,
-    (error) => {
+    response => {
+        console.log('Response:', response.data);
+        return response;
+    },
+    error => {
         console.error('API Error:', {
             message: error.message,
             code: error.code,
@@ -36,88 +30,54 @@ api.interceptors.response.use(
             status: error.response?.status,
             data: error.response?.data
         });
-        throw error;
+        return Promise.reject(error);
     }
 );
 
-// Add health check function
+// Health check function
 export const checkApiHealth = async () => {
     try {
-        console.log('Checking API health...');
-        console.log('Environment:', isDevelopment ? 'Development' : 'Production');
-        console.log('Base URL:', getBaseUrl());
-        
-        const response = await api.get('/');
-        
-        console.log('API health check response:', {
-            status: response.status,
-            statusText: response.statusText,
-            data: response.data
-        });
-        
-        return true;
+        const response = await api.get('/health');
+        console.log('API health check response:', response.data);
+        return response.data;
     } catch (error) {
         console.error('API health check failed:', {
             message: error.message,
             code: error.code,
-            baseURL: getBaseUrl()
+            baseURL: error.config?.baseURL
         });
-        return false;
+        throw error;
     }
 };
 
-export const authService = {
-    register: async (userData) => {
-        try {
-            const response = await axios.post(`${API_URL}/users/register`, userData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
-            });
-            return response.data;
-        } catch (error) {
-            throw {
-                message: error.message || 'Registration failed',
-                status: error.response?.status || 500,
-                details: error.details
-            };
+// Login function
+export const login = async (email, password) => {
+    try {
+        const response = await api.post('/auth/login', { email, password });
+        if (response.data.token) {
+            localStorage.setItem('token', response.data.token);
+            api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
         }
-    },
+        return response.data;
+    } catch (error) {
+        console.error('Login error:', error);
+        throw error;
+    }
+};
 
-    login: async (credentials) => {
-        try {
-            console.log('Attempting login...');
-            console.log('Environment:', isDevelopment ? 'Development' : 'Production');
-            console.log('Base URL:', getBaseUrl());
-            
-            const response = await api.post('/users/login', credentials);
+// Logout function
+export const logout = () => {
+    localStorage.removeItem('token');
+    delete api.defaults.headers.common['Authorization'];
+};
 
-            console.log('Login response:', {
-                status: response.status,
-                hasToken: !!response.data.token
-            });
-
-            if (!response.data.token) {
-                throw new Error('No token received from server');
-            }
-
-            return {
-                token: response.data.token
-            };
-        } catch (error) {
-            console.error('Login error:', {
-                message: error.message,
-                code: error.code,
-                status: error.response?.status,
-                data: error.response?.data
-            });
-
-            throw {
-                message: error.response?.data?.message || error.message || 'Login failed',
-                status: error.response?.status || 500,
-                details: error.response?.data
-            };
-        }
+// Get current user function
+export const getCurrentUser = async () => {
+    try {
+        const response = await api.get('/auth/me');
+        return response.data;
+    } catch (error) {
+        console.error('Get current user error:', error);
+        throw error;
     }
 };

@@ -1,5 +1,5 @@
 // Force HTTPS URL for production
-const PRODUCTION_API_URL = 'https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com';
+const PRODUCTION_API_URL = 'https://api.clubpage.pages.dev';
 
 // Get the API URL based on environment
 const getApiUrl = () => {
