@@ -7,8 +7,10 @@ const isDevelopment = import.meta.env.DEV;
 // Get the base URL based on environment
 const getBaseUrl = () => {
     if (isDevelopment) {
+        console.log('Using development base URL');
         return '/api';  // Use the proxy in development
     }
+    console.log('Using production base URL:', API_URL);
     return API_URL;     // Use the direct URL in production
 };
 
