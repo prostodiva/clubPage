@@ -1,4 +1,4 @@
-export const API_URL = import.meta.env.VITE_API_URL || 'https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com';
+export const API_URL = import.meta.env.VITE_API_URL || 'https://api.clubpage.pages.dev';
 
 export const axiosConfig = {
     baseURL: API_URL,

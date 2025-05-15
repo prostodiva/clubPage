@@ -18,7 +18,15 @@ app.get('/', (req, res) => {
 
 securityMiddleware(app);
 
-app.use(cors());                                            //Enable CORS for all routes
+// Configure CORS
+const corsOptions = {
+    origin: ['https://clubpage.pages.dev', 'http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+};
+
+app.use(cors(corsOptions));                                 //Enable CORS with specific options
 app.use(express.json());                                    //Parse incoming requests with JSON payloads
 
 app.use('/uploads', express.static('uploads'));
