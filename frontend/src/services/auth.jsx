@@ -37,47 +37,66 @@ export const checkApiHealth = async () => {
         console.log('Checking API health at:', url);
         console.log('Current API_URL value:', API_URL);
         
-        // Try to make a simple GET request to the root endpoint
-        const response = await axios.get(url, {
+        // First try a simple fetch request
+        const fetchResponse = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            mode: 'cors'
+        });
+        
+        console.log('Fetch response:', {
+            status: fetchResponse.status,
+            statusText: fetchResponse.statusText,
+            ok: fetchResponse.ok,
+            headers: Object.fromEntries(fetchResponse.headers.entries())
+        });
+
+        // If fetch works, try axios as well
+        const axiosResponse = await axios.get(url, {
             timeout: 5000,
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            // Add these options to handle CORS
-            withCredentials: false,
-            validateStatus: function (status) {
-                return status >= 200 && status < 500; // Accept any 2xx or 3xx or 4xx status
-            }
+            withCredentials: false
         });
         
-        console.log('API health check response:', {
-            status: response.status,
-            statusText: response.statusText,
-            headers: response.headers,
-            data: response.data
+        console.log('Axios response:', {
+            status: axiosResponse.status,
+            statusText: axiosResponse.statusText,
+            headers: axiosResponse.headers,
+            data: axiosResponse.data
         });
         
-        // Consider any response as "healthy" since we got a response
         return true;
     } catch (error) {
         console.error('API health check failed:', {
+            name: error.name,
             message: error.message,
             code: error.code,
             url: API_URL,
-            config: error.config,
-            response: error.response,
             stack: error.stack
         });
 
-        // If we get a network error but the API is actually accessible,
-        // we might want to consider it "healthy" anyway
-        if (error.code === 'ERR_NETWORK') {
-            console.log('Network error but API might be accessible');
-            return true;
+        // Try one more time with a different approach
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                mode: 'no-cors'  // This will make the request without CORS
+            });
+            console.log('No-CORS fetch response:', {
+                type: response.type,
+                status: response.status,
+                ok: response.ok
+            });
+            return true;  // If we get here, the API is probably accessible
+        } catch (fetchError) {
+            console.error('No-CORS fetch also failed:', fetchError);
+            return false;
         }
-
-        return false;
     }
 };
 
@@ -105,63 +124,69 @@ export const authService = {
             console.log('Attempting login with credentials:', { email: credentials.email });
             console.log('API URL:', `${API_URL}/users/login`);
             
-            const response = await axios.post(`${API_URL}/users/login`, credentials, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                // Add these options to handle CORS
-                withCredentials: false,
-                validateStatus: function (status) {
-                    return status >= 200 && status < 500; // Accept any 2xx or 3xx or 4xx status
-                }
-            });
-
-            console.log('Login response:', {
-                status: response.status,
-                hasToken: !!response.data.token,
-                data: response.data,
-                headers: response.headers
-            });
-
-            if (!response.data.token) {
-                throw new Error('No token received from server');
-            }
-
-            return {
-                token: response.data.token,
-            };
-        } catch (error) {
-            // Network error or CORS error
-            if (!error.response) {
-                console.error('Network Error during login:', {
-                    message: error.message,
-                    code: error.code,
-                    stack: error.stack,
-                    url: error.config?.url
+            // Try axios first
+            try {
+                const response = await axios.post(`${API_URL}/users/login`, credentials, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    withCredentials: false
                 });
-                throw {
-                    message: 'Unable to connect to the server. Please check your internet connection.',
-                    details: error.message,
-                    code: error.code
+
+                console.log('Login response:', {
+                    status: response.status,
+                    hasToken: !!response.data.token,
+                    data: response.data,
+                    headers: response.headers
+                });
+
+                if (!response.data.token) {
+                    throw new Error('No token received from server');
+                }
+
+                return {
+                    token: response.data.token,
+                };
+            } catch (axiosError) {
+                console.log('Axios login failed, trying fetch:', axiosError);
+                
+                // If axios fails, try fetch
+                const fetchResponse = await fetch(`${API_URL}/users/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(credentials),
+                    mode: 'cors'
+                });
+
+                const data = await fetchResponse.json();
+                console.log('Fetch login response:', {
+                    status: fetchResponse.status,
+                    ok: fetchResponse.ok,
+                    data
+                });
+
+                if (!data.token) {
+                    throw new Error('No token received from server');
+                }
+
+                return {
+                    token: data.token
                 };
             }
-
-            // Server response error
+        } catch (error) {
             console.error('Login error details:', {
-                status: error.response?.status,
-                data: error.response?.data,
-                message: error.response?.data?.message || error.message,
-                headers: error.response?.headers,
-                config: {
-                    url: error.config?.url,
-                    method: error.config?.method,
-                    headers: error.config?.headers
-                }
+                name: error.name,
+                message: error.message,
+                code: error.code,
+                stack: error.stack
             });
 
             throw {
-                message: error.response?.data?.message || 'Login failed',
+                message: error.message || 'Login failed',
                 status: error.response?.status || 500,
                 details: error.response?.data
             };
