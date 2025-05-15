@@ -25,6 +25,11 @@ export default defineConfig({
   build: {
     commonjsOptions: {
       transformMixedEsModules: true
-    }
+    },
+    outDir: 'dist',
+    sourcemap: true,
+  },
+  preview: {
+    port: 5173,
   }
 })

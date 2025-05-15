@@ -75,7 +75,6 @@ const clubSchema = new Schema({
     timestamps: true
 });
 
-clubSchema.index({ title: 1 });
 clubSchema.index({ 'cabinet.userId': 1 });
 
 clubSchema.methods.isInCabinet = function(userId) {

@@ -19,9 +19,18 @@ const authenticate = (req, res, next) => {
 };
 
 const securityMiddleware = (app) => {
-    // Basic CORS setup only
+    // CORS setup with environment-based origin
     app.use((req, res, next) => {
-        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+        const allowedOrigins = [
+            'http://localhost:5173',  // Development
+            'http://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com'  // Production
+        ];
+        
+        const origin = req.headers.origin;
+        if (allowedOrigins.includes(origin)) {
+            res.setHeader('Access-Control-Allow-Origin', origin);
+        }
+        
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         res.setHeader('Access-Control-Allow-Credentials', 'true');

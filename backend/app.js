@@ -11,6 +11,11 @@ const messageRoutes = require('./api/route/messageRoutes');
 
 const app = express();                                      //creates a new Express application
 
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.status(200).send('OK');
+});
+
 securityMiddleware(app);
 
 app.use(cors());                                            //Enable CORS for all routes

@@ -11,8 +11,7 @@ services:
     environment:
       - VITE_HOST=0.0.0.0
       - NODE_ENV=development
-    depends_on:
-      - backend
+      - VITE_API_URL=https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com
     command: npm run dev
     networks:
       - app-network
@@ -26,30 +25,21 @@ services:
       - backend_node_modules:/app/node_modules
       - ./backend/uploads:/app/uploads
     environment:
-      - MONGO_URI=mongodb://mongo:27017/clubpage
+      - MONGO_URI=mongodb+srv://kattsyna:yu7SdJsrY6kahmIK@cluster0.e5qd8g7.mongodb.net/clubpage?retryWrites=true&w=majority&appName=Cluster0
       - PORT=8080
       - NODE_ENV=development
-      - CORS_ORIGIN=http://localhost:5173
+      - CORS_ORIGIN=https://clubpage.pages.dev
       - JWT_SECRET=your_secret_key_here
-    depends_on:
-      - mongo
+      - BASE_URL=https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com
     networks:
       - app-network
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - app-network
-
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
 networks:
   app-network:
     driver: bridge
 
 volumes:
-  mongo-data:
   frontend_node_modules:
   backend_node_modules:
