@@ -1,24 +1,25 @@
 // API URLs
-const PRODUCTION_API_URL = 'https://clubpage.pages.dev/api';
+const PRODUCTION_API_URL = 'https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com';
 const DEVELOPMENT_API_URL = '/api';
 
 // Get the API URL based on environment
 const getApiUrl = () => {
-    // Check for environment variable first
+    // In production, always use the Elastic Beanstalk URL
+    if (!import.meta.env.DEV) {
+        console.log('Using production API URL:', PRODUCTION_API_URL);
+        return PRODUCTION_API_URL;
+    }
+
+    // In development, check for environment variable
     const envUrl = import.meta.env.VITE_API_URL;
     if (envUrl) {
         console.log('Using API URL from environment variable:', envUrl);
         return envUrl;
     }
 
-    // Fall back to default URLs based on environment
-    if (import.meta.env.DEV) {
-        console.log('Using development API URL:', DEVELOPMENT_API_URL);
-        return DEVELOPMENT_API_URL;
-    }
-    
-    console.log('Using production API URL:', PRODUCTION_API_URL);
-    return PRODUCTION_API_URL;
+    // Fall back to development URL
+    console.log('Using development API URL:', DEVELOPMENT_API_URL);
+    return DEVELOPMENT_API_URL;
 };
 
 // Export the API URL

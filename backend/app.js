@@ -22,7 +22,8 @@ securityMiddleware(app);
 const corsOptions = {
     origin: [
         'https://clubpage.pages.dev',
-        'http://localhost:5173'
+        'http://localhost:5173',
+        'https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
