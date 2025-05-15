@@ -1,23 +1,64 @@
 export async function onRequest(context) {
-  const url = new URL(context.request.url);
-  const targetUrl = new URL(context.request.url.replace('/api/', 'http://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com/'));
-  
-  // Clone the request and modify it for the target
-  const modifiedRequest = new Request(targetUrl, {
-    method: context.request.method,
-    headers: context.request.headers,
-    body: context.request.body,
-    redirect: 'follow',
-  });
+  // Handle CORS preflight requests
+  if (context.request.method === 'OPTIONS') {
+    return new Response(null, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Max-Age': '86400'
+      }
+    });
+  }
 
   try {
+    const url = new URL(context.request.url);
+    const path = url.pathname.replace('/api/', '');
+    const targetUrl = new URL(`http://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com/${path}`);
+    
+    // Clone the request and modify it for the target
+    const modifiedRequest = new Request(targetUrl, {
+      method: context.request.method,
+      headers: {
+        ...Object.fromEntries(context.request.headers),
+        'Host': targetUrl.host,
+        'Origin': targetUrl.origin
+      },
+      body: context.request.body,
+      redirect: 'follow',
+    });
+
+    console.log('Proxying request:', {
+      from: url.toString(),
+      to: targetUrl.toString(),
+      method: context.request.method
+    });
+
     const response = await fetch(modifiedRequest);
-    return response;
+    
+    // Clone the response and modify headers
+    const modifiedResponse = new Response(response.body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: {
+        ...Object.fromEntries(response.headers),
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+      }
+    });
+
+    return modifiedResponse;
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'API request failed' }), {
+    console.error('Proxy error:', error);
+    return new Response(JSON.stringify({ 
+      error: 'API request failed',
+      message: error.message
+    }), {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
     });
   }

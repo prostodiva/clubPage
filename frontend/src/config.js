@@ -1,5 +1,5 @@
 // Force HTTPS URL for production
-const PRODUCTION_API_URL = 'https://api.clubpage.pages.dev';
+const PRODUCTION_API_URL = 'https://clubpage.pages.dev/api';
 
 // Get the API URL based on environment
 const getApiUrl = () => {
@@ -19,5 +19,6 @@ export const axiosConfig = {
     baseURL: API_URL,
     headers: {
         'Content-Type': 'application/json'
-    }
+    },
+    timeout: 30000 // Increase timeout to 30 seconds
 }; 

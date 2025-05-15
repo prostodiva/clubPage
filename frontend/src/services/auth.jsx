@@ -44,7 +44,8 @@ export const checkApiHealth = async () => {
         console.error('API health check failed:', {
             message: error.message,
             code: error.code,
-            baseURL: error.config?.baseURL
+            baseURL: error.config?.baseURL,
+            url: error.config?.url
         });
         throw error;
     }
@@ -60,7 +61,12 @@ export const login = async (email, password) => {
         }
         return response.data;
     } catch (error) {
-        console.error('Login error:', error);
+        console.error('Login error:', {
+            message: error.message,
+            code: error.code,
+            status: error.response?.status,
+            data: error.response?.data
+        });
         throw error;
     }
 };
