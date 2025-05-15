@@ -1,15 +1,24 @@
-// Force HTTPS URL for production
+// API URLs
 const PRODUCTION_API_URL = 'https://clubpage.pages.dev/api';
+const DEVELOPMENT_API_URL = '/api';
 
 // Get the API URL based on environment
 const getApiUrl = () => {
-    // Always use the proxy URL in production
-    if (!import.meta.env.DEV) {
-        console.log('Using production API URL:', PRODUCTION_API_URL);
-        return PRODUCTION_API_URL;
+    // Check for environment variable first
+    const envUrl = import.meta.env.VITE_API_URL;
+    if (envUrl) {
+        console.log('Using API URL from environment variable:', envUrl);
+        return envUrl;
     }
-    console.log('Using development API URL');
-    return '/api';  // Use the proxy in development
+
+    // Fall back to default URLs based on environment
+    if (import.meta.env.DEV) {
+        console.log('Using development API URL:', DEVELOPMENT_API_URL);
+        return DEVELOPMENT_API_URL;
+    }
+    
+    console.log('Using production API URL:', PRODUCTION_API_URL);
+    return PRODUCTION_API_URL;
 };
 
 // Export the API URL

@@ -15,7 +15,7 @@ export async function onRequest(context) {
   try {
     const url = new URL(context.request.url);
     const path = url.pathname.replace('/api/', '');
-    const targetUrl = new URL(`http://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com/${path}`);
+    const targetUrl = new URL(`https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com/${path}`);
     
     console.log('Incoming request:', {
       method: context.request.method,

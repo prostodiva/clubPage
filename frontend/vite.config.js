@@ -9,11 +9,9 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'https://clubpage-api-env.eba-rstfvjmj.us-west-1.elasticbeanstalk.com',
+        target: 'https://clubpage.pages.dev',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-        secure: true,
-        ws: true
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   },
