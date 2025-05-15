@@ -10,7 +10,8 @@ axios.interceptors.response.use(
             console.error('Network Error:', {
                 message: error.message,
                 code: error.code,
-                stack: error.stack
+                stack: error.stack,
+                url: error.config?.url
             });
             throw {
                 message: 'Network error - Unable to reach the server',
@@ -28,6 +29,28 @@ axios.interceptors.response.use(
         throw error.response?.data || { message: 'An error occurred' };
     }
 );
+
+// Add health check function
+export const checkApiHealth = async () => {
+    try {
+        console.log('Checking API health at:', API_URL);
+        const response = await axios.get(API_URL, {
+            timeout: 5000,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        console.log('API health check response:', response.status);
+        return response.status === 200;
+    } catch (error) {
+        console.error('API health check failed:', {
+            message: error.message,
+            code: error.code,
+            url: API_URL
+        });
+        return false;
+    }
+};
 
 export const authService = {
     register: async (userData) => {
