@@ -1,6 +1,6 @@
 import { API_URL } from '@/config';
 import { useAuth } from '@/context/AuthContext';
-import { authService, checkApiHealth } from '@/services/auth';
+import { login, checkApiHealth } from '@/services/auth';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from "../components/Footer";
@@ -49,7 +49,7 @@ const LoginPage = () => {
             console.log('Attempting login for:', data.email);
             console.log('Using API URL:', API_URL);
 
-            const response = await authService.login(data);
+            const response = await login(data);
 
             console.log('Login successful, got token:', !!response.token);
 

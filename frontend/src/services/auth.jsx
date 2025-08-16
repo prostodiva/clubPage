@@ -103,3 +103,23 @@ export const getCurrentUser = async () => {
         throw error;
     }
 };
+// Registration function
+export const register = async (userData) => {
+    try {
+        console.log("Attempting registration...");
+        console.log("Environment:", import.meta.env.DEV ? "Development" : "Production");
+        console.log("API URL:", API_URL);
+        
+        const response = await api.post("/auth/register", userData);
+        return response.data;
+    } catch (error) {
+        console.error("Registration error:", {
+            message: error.message,
+            code: error.code,
+            status: error.response?.status,
+            data: error.response?.data,
+            environment: import.meta.env.DEV ? "Development" : "Production"
+        });
+        throw error;
+    }
+};

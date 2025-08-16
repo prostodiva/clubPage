@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../services/auth';
+import { register } from '../services/auth';
 
 import RegistrationForm from "../components/RegistrationForm";
 import Header from "@/components/Header.jsx";
@@ -16,7 +16,7 @@ const RegistrationPage = () => {
             setError('');
             setSuccess('');
             console.log('Submitting registration:', data);
-            const response = await authService.register(data);
+            const response = await register(data);
             console.log('Registration successful:', response);
             setSuccess('Registration successful! You can now login.');
             setTimeout(() => {
