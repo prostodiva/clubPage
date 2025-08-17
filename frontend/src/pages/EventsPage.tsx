@@ -2,7 +2,7 @@
 
 function EventsPage() {
     return(
-        <div>Events Page</div>
+        <div className="text-red-500">Events Page</div>
     );
 }
 
