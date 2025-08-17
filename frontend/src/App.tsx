@@ -6,6 +6,7 @@ import MeetingsPage from "./pages/MeetingsPage.tsx";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
+import SearchPage from "./pages/SearchPage";
 
 const router = createBrowserRouter([
     {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
             {
                 path: '/dashboard',
                 element: <DashboardPage />,
+            },
+            {
+                path: '/search',
+                element: <SearchPage />,
             }
         ]
     }
