@@ -1,6 +1,12 @@
+import { Link } from 'react-router-dom';
+
 function Header() {
+
     return(
-        <div>header</div>
+        <div>
+            <h1>header</h1>
+            <Link to='/'>LOGO</Link>
+        </div>
     );
 }
 
