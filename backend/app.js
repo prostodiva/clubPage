@@ -8,6 +8,7 @@ const meetingRoutes = require('./api/route/meetingRoutes');
 const notificationRoutes = require('./api/route/notificationRoutes');
 const chatRoutes = require('./api/route/chatRoutes');
 const messageRoutes = require('./api/route/messageRoutes');
+const searchRoutes = require('./api/route/searchRoutes');
 
 const app = express();                                      //creates a new Express application
 
@@ -41,5 +42,6 @@ app.use('/meetings', meetingRoutes);
 app.use('/notify', notificationRoutes);
 app.use('/chats', chatRoutes);
 app.use('/messages', messageRoutes);
+app.use('/search', searchRoutes);
 
 module.exports = app;                                       //export the Express application

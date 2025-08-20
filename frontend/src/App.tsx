@@ -1,3 +1,4 @@
+
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Root from './root/Root.tsx'
 import HomePage from "./pages/HomePage";
@@ -6,41 +7,22 @@ import MeetingsPage from "./pages/MeetingsPage.tsx";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
-import SearchPage from "./pages/SearchPage";
+import { SearchPage } from "./pages/search/SearchPage.tsx";
+import { searchLoader } from "./pages/search/searchLoader.ts";
+
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <Root />,
         children: [
-            {
-                index: true,
-                element: <HomePage />,
-            },
-            {
-                path: '/events',
-                element: <EventsPage />,
-            },
-            {
-                path: '/meetings',
-                element: <MeetingsPage />,
-            },
-            {
-                path: '/login',
-                element: <LoginPage />,
-            },
-            {
-                path: '/register',
-                element: <RegisterPage />,
-            },
-            {
-                path: '/dashboard',
-                element: <DashboardPage />,
-            },
-            {
-                path: '/search',
-                element: <SearchPage />,
-            }
+            { index: true, element: <HomePage /> },
+            { path: '/events', element: <EventsPage /> },
+            { path: '/meetings', element: <MeetingsPage /> },
+            { path: '/login', element: <LoginPage /> },
+            { path: '/register', element: <RegisterPage /> },
+            { path: '/dashboard', element: <DashboardPage /> },
+            { path: '/search', element: <SearchPage />, loader: searchLoader }
         ]
     }
 ]);
