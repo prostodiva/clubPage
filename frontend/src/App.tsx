@@ -1,6 +1,7 @@
 /**
  * @fileoverview Main application component with routing configuration
- * @description Sets up React Router with all application routes and pages
+ * @description Sets up React Router with all application routes and pages;
+ * configures Redux store provider
  * @module App
  * @author Margarita Kattsyna
  * @version 1.0.0
@@ -23,6 +24,9 @@ import { Provider } from "react-redux";
  * Main router configuration for the application
  * @description Defines all routes and their associated components/loaders
  * @type {import('react-router-dom').BrowserRouter}
+ *
+ * @see {@link Root} - the root layout component
+ * @see {@link searchLoader} - Data loader for search functionality
  */
 const router = createBrowserRouter([
     {
@@ -41,10 +45,14 @@ const router = createBrowserRouter([
 ]);
 
 /**
- * Main App component that renders the router
+ * Main App component that renders the router and REdux provider
  * @component App
- * @description Root component that initializes the application with routing
- * @returns {JSX.Element} The main application with router provider
+ * @description Root component that initializes the application with routing and state management
+ * @returns {JSX.Element} The main application wrapped with Redux provider and router
+ *
+ * @see {@link Provider} - Redux store provider
+ * @see {@link RouterProvider} - React Router provider
+ * @see {@link store} - redux store configuration
  */
 function App() {
   return (
