@@ -6,3 +6,4 @@ backend/.idea/
 /data/db/
 fontend/react/node_modules
 .cursor
+.docs

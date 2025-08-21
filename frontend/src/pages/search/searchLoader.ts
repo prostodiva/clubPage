@@ -1,4 +1,3 @@
-// pages/search/searchLoader.ts
 import { searchAll } from "../../api/queries/searchAll";
 import type { ClubSummary, MeetingSummary, RouteSuggestion, UserSummary } from "../../api/types/searchTypes";
 

@@ -1,0 +1,30 @@
+{
+  "entryPoints": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "out": "docs",
+  "exclude": [
+    "node_modules/**/*",
+    "dist/**/*",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ],
+  "theme": "default",
+  "name": "ClubPage Frontend Documentation",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "includeVersion": true,
+  "categorizeByGroup": true,
+  "categoryOrder": [
+    "Components",
+    "Pages", 
+    "API",
+    "Types",
+    "Utilities",
+    "*"
+  ]
+}
