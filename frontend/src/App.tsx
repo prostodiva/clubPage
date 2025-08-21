@@ -43,10 +43,6 @@ const router = createBrowserRouter([
  * @component App
  * @description Root component that initializes the application with routing
  * @returns {JSX.Element} The main application with router provider
- * @example
- * ```tsx
- * <App />
- * ```
  */
 function App() {
   return (
