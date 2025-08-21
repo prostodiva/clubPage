@@ -42,3 +42,12 @@ export interface SearchResponse {
         type: 'club' | 'user' | 'meeting' | 'route';
     }[];
 }
+
+export interface SearchLoaderResult {
+    searchResults: {
+        clubs: ClubSummary[];
+        users: UserSummary[];
+        meetings: MeetingSummary[];
+        routes: RouteSuggestion[];
+    };
+}

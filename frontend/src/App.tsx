@@ -6,7 +6,7 @@
  * @version 1.0.0
  */
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import DashboardPage from "./pages/DashboardPage";
 import EventsPage from "./pages/EventsPage.tsx";
 import HomePage from "./pages/HomePage";
@@ -16,6 +16,8 @@ import RegisterPage from "./pages/RegisterPage";
 import { SearchPage } from "./pages/search/SearchPage.tsx";
 import { searchLoader } from "./pages/search/searchLoader.ts";
 import Root from './root/Root.tsx';
+import {store} from "./store/store.ts";
+import { Provider } from "react-redux";
 
 /**
  * Main router configuration for the application
@@ -47,7 +49,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <div>
-      <RouterProvider router={router} />
+      <Provider store={store} >
+          <RouterProvider router={router} />
+      </Provider>
     </div>
   );
 }

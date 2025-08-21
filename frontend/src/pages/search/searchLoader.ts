@@ -1,14 +1,6 @@
-import { searchAll } from "../../api/queries/searchAll";
-import type { ClubSummary, MeetingSummary, RouteSuggestion, UserSummary } from "../../api/types/searchTypes";
-
-export interface SearchLoaderResult {
-    searchResults: {
-        clubs: ClubSummary[];
-        users: UserSummary[];
-        meetings: MeetingSummary[];
-        routes: RouteSuggestion[];
-    };
-}
+import { searchApi } from '../../store/api/searchApi';
+import type { SearchLoaderResult } from '../../store/api/types/searchTypes';
+import { store } from '../../store/store';
 
 export async function searchLoader({
     request,
@@ -22,13 +14,21 @@ export async function searchLoader({
         throw new Error('Search term must be provided');
     }
 
-    const results = await searchAll(term);
+    const result = await store.dispatch(
+        searchApi.endpoints.searchAll.initiate(term)
+    );
+
+    if (result.error) {
+        throw new Error('Search failed');
+    }
+
+    const { objects } = result.data!;
 
     const searchResults = {
-        clubs: results.objects.filter(obj => obj.club).map(obj => obj.club!),
-        users: results.objects.filter(obj => obj.user).map(obj => obj.user!),
-        meetings: results.objects.filter(obj => obj.meeting).map(obj => obj.meeting!),
-        routes: results.objects.filter(obj => obj.route).map(obj => obj.route!)
+        clubs: objects.filter(obj => obj.club).map(obj => obj.club!),
+        users: objects.filter(obj => obj.user).map(obj => obj.user!),
+        meetings: objects.filter(obj => obj.meeting).map(obj => obj.meeting!),
+        routes: objects.filter(obj => obj.route).map(obj => obj.route!)
     };
 
     return { searchResults };
