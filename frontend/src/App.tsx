@@ -1,13 +1,12 @@
 /**
- * @fileoverview Main application component with routing configuration
- * @description Sets up React Router with all application routes and pages;
- * configures Redux store provider
+ * Main application component with routing configuration
+ * Sets up React Router with all application routes and pages, configures Redux store provider
  * @module App
  * @author Margarita Kattsyna
- * @version 1.0.0
  */
 
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import { Provider } from "react-redux";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import DashboardPage from "./pages/DashboardPage";
 import EventsPage from "./pages/EventsPage.tsx";
 import HomePage from "./pages/HomePage";
@@ -17,15 +16,19 @@ import RegisterPage from "./pages/RegisterPage";
 import { SearchPage } from "./pages/search/SearchPage.tsx";
 import { searchLoader } from "./pages/search/searchLoader.ts";
 import Root from './root/Root.tsx';
-import {store} from "./store/store.ts";
-import { Provider } from "react-redux";
+import { store } from "./store/store.ts";
 
 /**
  * Main router configuration for the application
- * @description Defines all routes and their associated components/loaders
- * @type {import('react-router-dom').BrowserRouter}
- *
- * @see {@link Root} - the root layout component
+ * Defines all routes and their associated components/loaders using React Router v7
+ * @example
+ * ```tsx
+ * // Router configuration with nested routes
+ * const router = createBrowserRouter([
+ *   { path: '/', element: <Root />, children: [...] }
+ * ]);
+ * ```
+ * @see {@link Root} - The root layout component
  * @see {@link searchLoader} - Data loader for search functionality
  */
 const router = createBrowserRouter([
@@ -45,14 +48,19 @@ const router = createBrowserRouter([
 ]);
 
 /**
- * Main App component that renders the router and REdux provider
- * @component App
- * @description Root component that initializes the application with routing and state management
- * @returns {JSX.Element} The main application wrapped with Redux provider and router
- *
+ * Main App component that renders the router and Redux provider
+ * Root component that initializes the application with routing and state management
+ * @returns The main application wrapped with Redux provider and router
+ * @example
+ * ```tsx
+ * // Basic usage
+ * <App />
+ * 
+ * // Renders the entire application with routing and state management
+ * ```
  * @see {@link Provider} - Redux store provider
  * @see {@link RouterProvider} - React Router provider
- * @see {@link store} - redux store configuration
+ * @see {@link store} - Redux store configuration
  */
 function App() {
   return (

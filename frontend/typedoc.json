@@ -1,30 +1,21 @@
 {
-  "entryPoints": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ],
+  "entryPoints": ["src/**/*.ts", "src/**/*.tsx"],
   "out": "docs",
-  "exclude": [
-    "node_modules/**/*",
-    "dist/**/*",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx"
-  ],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "**/node_modules/**"],
   "theme": "default",
-  "name": "ClubPage Frontend Documentation",
-  "excludePrivate": true,
-  "excludeProtected": true,
-  "excludeExternals": true,
-  "includeVersion": true,
-  "categorizeByGroup": true,
-  "categoryOrder": [
-    "Components",
-    "Pages", 
-    "API",
-    "Types",
-    "Utilities",
-    "*"
-  ]
+  "name": "Club Page Frontend Documentation",
+  "categoryOrder": ["Pages", "Components", "Store", "API", "Types", "Utilities"],
+  "externalSymbolLinkMappings": {
+    "react-router": {
+      "useLoaderData": "https://reactrouter.com/en/main/hooks/use-loader-data",
+      "RouterProvider": "https://reactrouter.com/en/main/components/router-provider"
+    },
+    "react-redux": {
+      "Provider": "https://react-redux.js.org/api/provider"
+    },
+    "@reduxjs/toolkit": {
+      "fetchBaseQuery": "https://redux-toolkit.js.org/rtk-query/api/fetchBaseQuery",
+      "setupListeners": "https://redux-toolkit.js.org/rtk-query/api/setupListeners"
+    }
+  }
 }
