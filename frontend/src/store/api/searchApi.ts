@@ -11,16 +11,6 @@ import type { SearchResponse } from "./types/searchTypes";
 /**
  * RTK Query API slice for search operations
  * Creates a search API with automatic caching, invalidation, and state management
- * @example
- * ```typescript
- * // API slice configuration
- * export const searchApi = createApi({
- *   reducerPath: 'searchApi',
- *   baseQuery: fetchBaseQuery({ baseUrl: '/search' }),
- *   tagTypes: ['Search', 'Users', 'Clubs', 'Meetings', 'Routes', 'SearchResults'],
- *   endpoints: (builder) => ({ ... })
- * });
- * ```
  * @see {@link SearchResponse} - Type definition for search API responses
  */
 export const searchApi = createApi({
@@ -36,14 +26,6 @@ export const searchApi = createApi({
              * Performs a comprehensive search across all entity types with intelligent caching
              * @param term - The search term to look for
              * @returns Promise containing search results
-             * @example
-             * ```typescript
-             * // Search for users
-             * const { data, isLoading, error } = useSearchAllQuery('users');
-             * 
-             * // Search for specific content
-             * const { data, isLoading, error } = useSearchAllQuery('javascript club');
-             * ```
              * @see {@link SearchResponse} - Response type structure
              */
             searchAll: builder.query<SearchResponse, string>({
@@ -55,15 +37,6 @@ export const searchApi = createApi({
                  * @param _error - Any error that occurred (unused)
                  * @param term - The search term used
                  * @returns Array of cache tags
-                 * @example
-                 * ```typescript
-                 * // Cache tags for search term 'users'
-                 * [
-                 *   { type: 'Search', id: 'users' },
-                 *   { type: 'Users', id: 'user123' },
-                 *   { type: 'SearchResults', id: 'users' }
-                 * ]
-                 * ```
                  */
                 providesTags: (result, _error, term) => {
                     if (!result) return [{ type: 'Search' as const, id: term }];
@@ -100,16 +73,6 @@ export const searchApi = createApi({
 /**
  * Exported hooks for use in React components
  * Provides typed hooks for interacting with the search API
- * @example
- * ```typescript
- * // Use the search query hook
- * import { useSearchAllQuery } from './searchApi';
- * 
- * function SearchComponent() {
- *   const { data, isLoading, error } = useSearchAllQuery('search term');
- *   // ... component logic
- * }
- * ```
  * @see {@link useSearchAllQuery} - Hook for performing search queries
  */
 export const { useSearchAllQuery } = searchApi;

@@ -12,12 +12,6 @@ import type { SearchLoaderResult } from '../../store/api/types/searchTypes';
  * Search page component that displays organized search results
  * Renders search results grouped by entity type (clubs, users, meetings, routes)
  * @returns The search results page with organized content sections
- * @example
- * ```tsx
- * // This component is rendered by React Router
- * // when navigating to /search?term=users
- * <SearchPage />
- * ```
  * @see {@link SearchLoaderResult} - Type definition for search results
  */
 export function SearchPage() {

@@ -17,13 +17,6 @@ import { store } from '../../store/store';
  * @returns Promise containing processed search results organized by type
  * @throws {Error} When search term is missing from URL parameters
  * @throws {Error} When search API request fails
- * @example
- * ```typescript
- * // This function is called automatically by React Router
- * // when navigating to /search?term=users
- * const loader = await searchLoader({ request });
- * return loader.searchResults;
- * ```
  * @see {@link searchApi} - RTK Query API for search functionality
  * @see {@link SearchLoaderResult} - Type definition for loader results
  */

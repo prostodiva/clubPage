@@ -8,16 +8,6 @@
 /**
  * Summary information for a club entity
  * Compact representation of club data for search results and listings
- * @example
- * ```typescript
- * const club: ClubSummary = {
- *   _id: 'club123',
- *   title: 'JavaScript Developers Club',
- *   description: 'A club for JavaScript enthusiasts',
- *   imageUrl: 'https://example.com/club.jpg',
- *   createdAt: '2024-01-15T10:00:00Z'
- * };
- * ```
  */
 export interface ClubSummary {
     /** Unique identifier for the club */
@@ -35,16 +25,6 @@ export interface ClubSummary {
 /**
  * Summary information for a user entity
  * Compact representation of user data for search results and listings
- * @example
- * ```typescript
- * const user: UserSummary = {
- *   _id: 'user123',
- *   name: 'John Doe',
- *   email: 'john@example.com',
- *   profileImageUrl: 'https://example.com/profile.jpg',
- *   role: 'member'
- * };
- * ```
  */
 export interface UserSummary {
     /** Unique identifier for the user */
@@ -62,17 +42,6 @@ export interface UserSummary {
 /**
  * Summary information for a meeting entity
  * Compact representation of meeting data for search results and listings
- * @example
- * ```typescript
- * const meeting: MeetingSummary = {
- *   _id: 'meeting123',
- *   title: 'Weekly JavaScript Discussion',
- *   agenda: 'Discuss new ES2024 features',
- *   date: '2024-02-01T14:00:00Z',
- *   location: 'Room 101',
- *   clubId: 'club123'
- * };
- * ```
  */
 export interface MeetingSummary {
     /** Unique identifier for the meeting */
@@ -92,17 +61,6 @@ export interface MeetingSummary {
 /**
  * Route suggestion for category-based searches
  * Provides navigation suggestions when users search for entity categories
- * @example
- * ```typescript
- * const route: RouteSuggestion = {
- *   type: 'route',
- *   title: 'View All Users',
- *   description: 'Browse all registered users',
- *   url: '/users',
- *   method: 'GET',
- *   category: 'users'
- * };
- * ```
  */
 export interface RouteSuggestion {
     /** Always 'route' to identify this as a route suggestion */
@@ -122,16 +80,6 @@ export interface RouteSuggestion {
 /**
  * Response structure from the search API
  * Contains search results organized by entity type with optional properties
- * @example
- * ```typescript
- * const response: SearchResponse = {
- *   objects: [
- *     { club: clubData, type: 'club' },
- *     { user: userData, type: 'user' },
- *     { meeting: meetingData, type: 'meeting' }
- *   ]
- * };
- * ```
  * @see {@link ClubSummary} - Club entity data
  * @see {@link UserSummary} - User entity data
  * @see {@link MeetingSummary} - Meeting entity data
@@ -156,17 +104,6 @@ export interface SearchResponse {
 /**
  * Processed search results organized by entity type
  * Contains search results organized into separate arrays for easy consumption by components
- * @example
- * ```typescript
- * const loaderResult: SearchLoaderResult = {
- *   searchResults: {
- *     clubs: [club1, club2],
- *     users: [user1, user2],
- *     meetings: [meeting1],
- *     routes: [route1]
- *   }
- * };
- * ```
  * @see {@link ClubSummary} - Club entity data
  * @see {@link UserSummary} - User entity data
  * @see {@link MeetingSummary} - Meeting entity data

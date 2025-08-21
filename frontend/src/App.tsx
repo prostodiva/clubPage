@@ -21,13 +21,6 @@ import { store } from "./store/store.ts";
 /**
  * Main router configuration for the application
  * Defines all routes and their associated components/loaders using React Router v7
- * @example
- * ```tsx
- * // Router configuration with nested routes
- * const router = createBrowserRouter([
- *   { path: '/', element: <Root />, children: [...] }
- * ]);
- * ```
  * @see {@link Root} - The root layout component
  * @see {@link searchLoader} - Data loader for search functionality
  */
@@ -51,13 +44,6 @@ const router = createBrowserRouter([
  * Main App component that renders the router and Redux provider
  * Root component that initializes the application with routing and state management
  * @returns The main application wrapped with Redux provider and router
- * @example
- * ```tsx
- * // Basic usage
- * <App />
- * 
- * // Renders the entire application with routing and state management
- * ```
  * @see {@link Provider} - Redux store provider
  * @see {@link RouterProvider} - React Router provider
  * @see {@link store} - Redux store configuration
