@@ -14,7 +14,7 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      '/search': {  // Add this proxy rule
+      '/search': {
         target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,

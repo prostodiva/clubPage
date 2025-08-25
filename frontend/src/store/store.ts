@@ -5,9 +5,9 @@
  * @author Margarita Kattsyna
  */
 
-import { configureStore } from "@reduxjs/toolkit";
-import { setupListeners } from "@reduxjs/toolkit/query";
-import { searchApi } from "./api/searchApi.ts";
+import { configureStore } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import { searchApi } from './api/searchApi.ts';
 
 /**
  * Redux store configuration with RTK Query integration
@@ -15,12 +15,11 @@ import { searchApi } from "./api/searchApi.ts";
  * @see {@link searchApi} - RTK Query API slice for search functionality
  */
 export const store = configureStore({
-    reducer: {
-        [searchApi.reducerPath]: searchApi.reducer,
-    },
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware()
-            .concat(searchApi.middleware),
+  reducer: {
+    [searchApi.reducerPath]: searchApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(searchApi.middleware),
 });
 
 /**
